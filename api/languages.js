@@ -35,11 +35,8 @@ export default async function handler(req, res) {
     );
 
     const langResults = await Promise.all(languageFetches);
-    langResults.forEach((langs, idx) => {
-      console.log(`Repo: ${filteredRepos[idx].name}`, langs);
-    });
-
     const languageBytes = {};
+
     for (const languages of langResults) {
       for (const [lang, bytes] of Object.entries(languages)) {
         languageBytes[lang] = (languageBytes[lang] || 0) + bytes;
@@ -53,18 +50,46 @@ export default async function handler(req, res) {
       .sort((a, b) => b.pct - a.pct);
 
     const topLanguages = sortedLanguages.slice(0, 8);
-    console.log("Top 8 Languages:");
-    topLanguages.forEach(l => console.log(`${l.lang}: ${l.pct.toFixed(2)}%`));
+    
+    const barHeight = 18;
+    const barSpacing = 4;
+    const startY = 60;
+    const maxBarWidth = 170;
 
+    const leftColumn = topLanguages.slice(0, 4);
+    const rightColumn = topLanguages.slice(4, 8);
+
+    const bars = [
+      ...leftColumn.map((lang, i) => {
+        const barWidth = (lang.pct / 100) * maxBarWidth;
+        const y = startY + (i * (barHeight + barSpacing));
+        return `
+          <rect x="20" y="${y}" width="${barWidth}" height="${barHeight}" fill="#58a6ff" rx="4"/>
+          <text x="25" y="${y + 13}" fill="#ffffff" font-size="12" font-family="Arial">
+            ${lang.lang} ${lang.pct.toFixed(1)}%
+          </text>
+        `
+      }),
+      ...rightColumn.map((lang, i) => {
+        const barWidth = (lang.pct / 100) * maxBarWidth;
+        const y = startY + (i * (barHeight + barSpacing));
+        return `
+          <rect x="210" y="${y}" width="${barWidth}" height="${barHeight}" fill="#58a6ff" rx="4"/>
+          <text x="215" y="${y + 13}" fill="#ffffff" font-size="12" font-family="Arial">
+            ${lang.lang} ${lang.pct.toFixed(1)}%
+          </text>
+        `
+      })
+    ].join('');
+
+    const svgHeight = startY + (4 * (barHeight + barSpacing)) + 20;
     const svg = `
-      <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
-        <rect width="400" height="200" fill="#0d1117" rx="10"/>
-        <text x="200" y="100" text-anchor="middle" fill="#ffffff" font-family="Arial" font-size="24">
+      <svg width="400" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="400" height="${svgHeight}" fill="#0d1117" rx="10"/>
+        <text x="200" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial" font-size="24">
           Github Top Languages
         </text>
-        <text x="200" y="130" text-anchor="middle" fill="#8b949e" font-family="Arial" font-size="14">
-           Found ${Object.keys(languageBytes).length} languages across ${filteredRepos.length} repos
-        </text>
+        ${bars} 
       </svg>
     `;
   
