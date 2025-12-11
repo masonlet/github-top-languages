@@ -1,0 +1,8 @@
+{
+  "name": "github-top-languages",
+  "version": "0.0.1",
+  "description": "Github Top Langauges card generator",
+  "main": "index.js",
+  "author": "Mason L'Etoile",
+  "license": "MIT"
+}
