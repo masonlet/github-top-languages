@@ -20,18 +20,24 @@ export default async function handler(req, res) {
     }
 
     const repos = await reposResponse.json();
-
-    const languageFetches = repos
-      .filter(repo => !repo.fork)
-      .map(repo =>
-        fetch(`https://api.github.com/repos/${repo.full_name}/languages`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "application/vnd.github.v3+json"
-          }
-        }).then(r => r.ok ? r.json() : {})
+    const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
+    const filteredRepos = repos.filter(
+      repo => !repo.fork && !ignored.includes(repo.name)
     );
+
+    const languageFetches = filteredRepos.map(repo =>
+      fetch(`https://api.github.com/repos/${repo.full_name}/languages`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json"
+        }
+      }).then(r => r.ok ? r.json() : {})
+    );
+
     const langResults = await Promise.all(languageFetches);
+    langResults.forEach((langs, idx) => {
+      console.log(`Repo: ${filteredRepos[idx].name}`, langs);
+    });
 
     const languageBytes = {};
     for (const languages of langResults) {
@@ -40,6 +46,16 @@ export default async function handler(req, res) {
       }
     }
 
+    const totalBytes = Object.values(languageBytes).reduce((a, b) => a + b, 0);
+
+    const sortedLanguages = Object.entries(languageBytes)
+      .map(([lang, bytes]) => ({ lang, pct: (bytes / totalBytes) * 100 }))
+      .sort((a, b) => b.pct - a.pct);
+
+    const topLanguages = sortedLanguages.slice(0, 8);
+    console.log("Top 8 Languages:");
+    topLanguages.forEach(l => console.log(`${l.lang}: ${l.pct.toFixed(2)}%`));
+
     const svg = `
       <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
         <rect width="400" height="200" fill="#0d1117" rx="10"/>
@@ -47,7 +63,7 @@ export default async function handler(req, res) {
           Github Top Languages
         </text>
         <text x="200" y="130" text-anchor="middle" fill="#8b949e" font-family="Arial" font-size="14">
-           Found ${Object.keys(languageBytes).length} languages across ${repos.filter(r => !r.fork).length} repos
+           Found ${Object.keys(languageBytes).length} languages across ${filteredRepos.length} repos
         </text>
       </svg>
     `;
