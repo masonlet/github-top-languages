@@ -20,6 +20,26 @@ export default async function handler(req, res) {
     }
 
     const repos = await reposResponse.json();
+
+    const languageFetches = repos
+      .filter(repo => !repo.fork)
+      .map(repo =>
+        fetch(`https://api.github.com/repos/${repo.full_name}/languages`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/vnd.github.v3+json"
+          }
+        }).then(r => r.ok ? r.json() : {})
+    );
+    const langResults = await Promise.all(languageFetches);
+
+    const languageBytes = {};
+    for (const languages of langResults) {
+      for (const [lang, bytes] of Object.entries(languages)) {
+        languageBytes[lang] = (languageBytes[lang] || 0) + bytes;
+      }
+    }
+
     const svg = `
       <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
         <rect width="400" height="200" fill="#0d1117" rx="10"/>
@@ -27,7 +47,7 @@ export default async function handler(req, res) {
           Github Top Languages
         </text>
         <text x="200" y="130" text-anchor="middle" fill="#8b949e" font-family="Arial" font-size="14">
-          Found ${repos.length} repositories 
+           Found ${Object.keys(languageBytes).length} languages across ${repos.filter(r => !r.fork).length} repos
         </text>
       </svg>
     `;
