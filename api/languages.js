@@ -54,7 +54,19 @@ Z
 `;    
 }
 
+
+let cachedSVG = null;
+let lastRefresh = 0;
+const REFRESH_INTERVAL = 1000 * 60 * 60;
+
 export default async function handler(req, res) {
+  const now = Date.now();
+
+  if (cachedSVG && now - lastRefresh < REFRESH_INTERVAL){
+    res.setHeader('Content-Type', 'image/svg+xml');
+    return res.status(200).send(cachedSVG);
+  }
+
   const token = process.env.GITHUB_TOKEN
   if(!token){
     return res.status(500).send('GitHub token not configured');
@@ -141,8 +153,11 @@ export default async function handler(req, res) {
         ${legend}
       </svg>
     `;
-  
+
+  cachedSVG = svg;
+  lastRefresh = now;
   res.setHeader('Content-Type', 'image/svg+xml');
+  res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=60');
   res.status(200).send(svg);
   } catch (error) {
      const errorSvg = `
@@ -153,6 +168,7 @@ export default async function handler(req, res) {
         </text>
       </svg>
     `;
+
     res.setHeader('Content-Type', 'image/svg+xml');
     res.status(500).send(errorSvg);
   }
