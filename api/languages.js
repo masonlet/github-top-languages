@@ -54,7 +54,6 @@ Z
 `;    
 }
 
-
 let cachedSVG = null;
 let lastRefresh = 0;
 const REFRESH_INTERVAL = 1000 * 60 * 60;
@@ -67,25 +66,12 @@ export default async function handler(req, res) {
     return res.status(200).send(cachedSVG);
   }
 
-  const token = process.env.GITHUB_TOKEN
-  if(!token){
-    return res.status(500).send('GitHub token not configured');
-  }
-
   try {
-    const reposResponse = await fetch(
-      `https://api.github.com/user/repos?per_page=100&affiliation=owner`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: `application/vnd.github.v3+json`
-        }
-      }
-    );
+    const username = process.env.GITHUB_USERNAME;
+    if(!username) throw new Error(`No user called`);
 
-    if(!reposResponse){
-      throw new Error(`GitHub API error: ${reposResponse.status}`);
-    }
+    const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
+    if(!reposResponse.ok) throw new Error(`GitHub API error: ${reposResponse.status}`);
 
     const repos = await reposResponse.json();
     const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
@@ -94,12 +80,8 @@ export default async function handler(req, res) {
     );
 
     const languageFetches = filteredRepos.map(repo =>
-      fetch(`https://api.github.com/repos/${repo.full_name}/languages`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/vnd.github.v3+json"
-        }
-      }).then(r => r.ok ? r.json() : {})
+      fetch(`https://api.github.com/repos/${repo.full_name}/languages`)
+        .then(r => r.ok ? r.json() : {})
     );
 
     const langResults = await Promise.all(languageFetches);
