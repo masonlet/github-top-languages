@@ -34,7 +34,6 @@ Generate a top languages chart for your GitHub profile that you can embed in a R
 
 ### Prerequisites
 - Node.js 18+
-- A GitHub Personal Access Token with repo scope
 - (Optional) Vercel or other Node.js hosting
 
 ### Installation
@@ -46,7 +45,7 @@ npm install
 
 ### Configuration
 Copy `.env.example` to `.env`, and update the variables.
-- `GITHUB_TOKEN`: Required to fetch your repositories and statistics.
+- `GITHUB_USERNAME`: User to fetch repositories and statistics.
 - `IGNORED_REPOS`: Optional repos you don't want counted in your chart.
 
 ### Running Locally
