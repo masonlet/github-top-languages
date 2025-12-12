@@ -108,7 +108,8 @@ export default async function handler(req, res) {
 
     let currentAngle = 0;
     const segments = normalizedLanguages.map((lang, i) => {
-      const angle = (lang.pct / 100) * 360;
+      const isLast = i === normalizedLanguages.length - 1;
+      const angle = isLast ? 360 - currentAngle : (lang.pct / 100) * 360;
       const pathD = describeSegment(CHART_CENTER_X, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, currentAngle, currentAngle + angle);
       currentAngle += angle;
 
