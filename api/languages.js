@@ -1,3 +1,59 @@
+const TOP_LANGUAGES_COUNT = 8;
+
+const TITLE_Y = 30;
+const TITLE_FONT_SIZE = 24;
+
+const SVG_WIDTH = 400;
+const SVG_HEIGHT = 300;
+
+const CHART_CENTER_X = 150;
+const CHART_CENTER_Y = 170;
+const CHART_OUTER_RADIUS = 80;
+const CHART_INNER_RADIUS = 50;
+
+const LEGEND_START_X = 270;
+const LEGEND_TEXT_X = 287;
+const LEGEND_START_Y = 80;
+const LEGEND_ROW_HEIGHT = 25;
+const LEGEND_SQUARE_SIZE = 12;
+const LEGEND_SQUARE_RADIUS = 2;
+const LEGEND_FONT_SIZE = 11;
+
+const ERROR_TEXT_Y = 100;
+const ERROR_FONT_SIZE = 18;
+
+const BG_COLOUR = '#0d1117';
+const TEXT_COLOUR = '#ffffff';
+const ERROR_COLOUR = '#ff6b6b';
+const COLOURS = [
+  '#A8D5Ba', '#FFD6A5', '#FFAAA6', '#D0CFCF', 
+  '#CBAACB', '#FFE156', '#96D5E9', '#F3B0C3'
+];
+
+function polarToCartesian(centerX, centerY, radius, angleInDegrees){
+  const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+  return {
+    x: centerX + (radius * Math.cos(angleInRadians)),
+    y: centerY + (radius * Math.sin(angleInRadians))
+  };
+}
+
+function describeSegment(x, y, innerRadius, outerRadius, startAngle, endAngle){
+  const startOuter = polarToCartesian(x, y, outerRadius, endAngle);
+  const endOuter = polarToCartesian(x, y, outerRadius, startAngle);
+  const startInner = polarToCartesian(x, y, innerRadius, startAngle);
+  const endInner = polarToCartesian(x, y, innerRadius, endAngle);
+  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+  return `
+M ${startOuter.x} ${startOuter.y} 
+A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 0 ${endOuter.x} ${endOuter.y} 
+L ${startInner.x} ${startInner.y} 
+A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 1 ${endInner.x} ${endInner.y} 
+Z
+`;    
+}
+
 export default async function handler(req, res) {
   const token = process.env.GITHUB_TOKEN
   if(!token){
@@ -49,67 +105,36 @@ export default async function handler(req, res) {
       .map(([lang, bytes]) => ({ lang, pct: (bytes / totalBytes) * 100 }))
       .sort((a, b) => b.pct - a.pct);
 
-    const topLanguages = sortedLanguages.slice(0, 8);
+    const topLanguages = sortedLanguages.slice(0, TOP_LANGUAGES_COUNT);
     const totalPct = topLanguages.reduce((sum, lang) => sum + lang.pct, 0);
     const normalizedLanguages = topLanguages.map(lang => ({
       ...lang,
       pct: (lang.pct / totalPct) * 100
     }));
 
-    const centerX = 150;
-    const centerY = 170;
-    const radius = 80;
-    const innerRadius = 50;
-
-    const colours = ['#A8D5Ba', '#FFD6A5', '#FFAAA6', '#D0CFCF', '#CBAACB', '#FFE156', '#96D5E9', '#F3B0C3'];
-
-    function polarToCartesian(centerX, centerY, radius, angleInDegrees){
-      const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-      return {
-        x: centerX + (radius * Math.cos(angleInRadians)),
-        y: centerY + (radius * Math.sin(angleInRadians))
-      };
-    }
-
-    function describeSegment(x, y, innerRadius, outerRadius, startAngle, endAngle){
-      const startOuter = polarToCartesian(x, y, outerRadius, endAngle);
-      const endOuter = polarToCartesian(x, y, outerRadius, startAngle);
-      const startInner = polarToCartesian(x, y, innerRadius, startAngle);
-      const endInner = polarToCartesian(x, y, innerRadius, endAngle);
-      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
-
-      return `
-        M ${startOuter.x} ${startOuter.y} 
-        A ${outerRadius} ${outerRadius} 0 ${largeArcFlag} 0 ${endOuter.x} ${endOuter.y} 
-        L ${startInner.x} ${startInner.y} 
-        A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 1 ${endInner.x} ${endInner.y} 
-        Z
-      `;    
-    }
-
     let currentAngle = 0;
     const segments = normalizedLanguages.map((lang, i) => {
       const angle = (lang.pct / 100) * 360;
-      const pathD = describeSegment(centerX, centerY, innerRadius, radius, currentAngle, currentAngle + angle);
+      const pathD = describeSegment(CHART_CENTER_X, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, currentAngle, currentAngle + angle);
       currentAngle += angle;
 
-      return `<path d="${pathD}" fill="${colours[i]}"/>`;
+      return `<path d="${pathD}" fill="${COLOURS[i]}"/>`;
     }).join('');
 
     const legend = normalizedLanguages.map((lang, i) => {
-      const y = 80 + (i * 25);
+      const y = LEGEND_START_Y + (i * LEGEND_ROW_HEIGHT);
       return `
-        <rect x="270" y="${y - 10}" width="12" height="12" fill="${colours[i]}" rx="2"/>
-        <text x="287" y="${y}" fill="#ffffff" font-size="11" font-family="Arial">
+        <rect x="${LEGEND_START_X}" y="${y - 10}" width="${LEGEND_SQUARE_SIZE}" height="${LEGEND_SQUARE_SIZE}" fill="${COLOURS[i]}" rx="2"/>
+        <text x="${LEGEND_TEXT_X}" y="${y}" fill="${TEXT_COLOUR}" font-size="${LEGEND_FONT_SIZE}" font-family="Arial">
           ${lang.lang} ${lang.pct.toFixed(1)}%
         </text>
       `;
     }).join('');
 
     const svg = `
-      <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
-        <rect width="400" height="300" fill="#0d1117" rx="10"/>
-        <text x="200" y="30" text-anchor="middle" fill="#ffffff" font-family="Arial" font-size="24">
+      <svg width="${SVG_WIDTH}" height="${SVG_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${SVG_WIDTH}" height="${SVG_HEIGHT}" fill="${BG_COLOUR}" rx="10"/>
+        <text x="${SVG_WIDTH/2}" y="${TITLE_Y}" text-anchor="middle" fill="${TEXT_COLOUR}" font-family="Arial" font-size="${TITLE_FONT_SIZE}">
           Top Languages
         </text>
         ${segments}
@@ -121,9 +146,9 @@ export default async function handler(req, res) {
   res.status(200).send(svg);
   } catch (error) {
      const errorSvg = `
-      <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
-        <rect width="400" height="200" fill="#0d1117" rx="10"/>
-        <text x="200" y="100" text-anchor="middle" fill="#ff6b6b" font-family="Arial" font-size="18">
+      <svg width="${SVG_WIDTH}" height="${SVG_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${SVG_WIDTH}" height="${SVG_HEIGHT}" fill="${BG_COLOUR}" rx="10"/>
+        <text x="${SVG_WIDTH/2}" y="${ERROR_TEXT_Y}" text-anchor="middle" fill="${ERROR_COLOUR}" font-family="Arial" font-size="${ERROR_FONT_SIZE}">
           Error: ${error.message}
         </text>
       </svg>
