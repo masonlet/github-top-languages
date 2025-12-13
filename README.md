@@ -5,15 +5,18 @@ Generate a top languages chart for your GitHub profile that you can embed in a R
 ![Example Top Languages Chart](images/display.png)
 
 ## Features
-- Generates a donut chart of your top 8 programming languages.
-- Automatically fetches all your owned GitHub repositories.
-- Ignores forks and optionally specific repositories.
-- Uses caching to reduce API calls and improve performance.
+- Generates a donut chart of your top programming languages (up to 16).
+- **Customizable:** Control the title, size, theme, and number of languages displayed.
+    - **Theming**: Supports `default`, `light`, and `dark` themes.
+- **Dynamic Layout:** The legend automatically shifts to a **two-column layout** when displaying 9 or more languages.
+- Automatically fetches all your public GitHub repositories.
+- Ignores forks and optionally specific repositories (`IGNORED_REPOS`).
+- Uses **hourly caching** to reduce API calls and improve performance.
 
 ## Usage
 
 ### Markdown (For READMEs)
-```bash
+```markdown
 ![Top Languages](https://your-deployment-url.vercel.app/api/languages)
 ```
 
@@ -24,10 +27,27 @@ Generate a top languages chart for your GitHub profile that you can embed in a R
   alt="My Top Programming Languages" 
 />
 ```
+
+### Customization Options
+Append these query parameters to the URL to customize the look and data of your chart:
+
+| Parameter | Type | Description | Default | Example |
+| :--- | :--- | :--- | :--- | :--- |
+| `theme` | String | Sets the colour scheme. Available options: `default`, `light`, `dark`. | `default` | `?theme=dark` |
+| `title` | String | Sets a custom title for the chart. | `Top Languages` | `?title=My%20Code%20Stack` | 
+| `hide_title` | Boolean | Hides the chart title completely. | `false` | `?hide_title=true` |
+| `count` | Number | Sets the maximum number of languages to display. Max is **16**. | `8` | `?count=10` |
+| `width` | Number | Sets the width of the SVG in pixels. | `400` | `?width=500` |
+| `height` | Number | Sets the height of the SVg in pixels. | `300` | `?height=350` |
+
+
+#### Example URL
+To get 10 languages, a dark theme, and a custom title:
+```markdown
+![My Custom Chart](https://your-deployment-url.vercel.app/api/languages?count=10&theme=dark&title=My%20Top%2010$20Languages)
+```
+
 <br/>
-
-
-
 
 
 ## Deployment & Configuration
