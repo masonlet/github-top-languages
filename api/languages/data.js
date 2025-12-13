@@ -7,10 +7,24 @@ import {
 
 export function parseQueryParams(query) {
   const count = parseInt(query.count || query.langCount) || DEFAULT_CONFIG.COUNT;
+  const customTheme = THEMES[query.theme] || THEMES.default;
+  const customText = query.text || customTheme.text;
+  const customBg = THEMES[query.bg]?.bg || query.bg || customTheme.bg;
+  const customColours = [...customTheme.colours];
+  for (let i = 1; i <= 16; i++) {
+    if(query[`c${i}`]) {
+      const colour = query[`c${i}`].replace(/^#/, '');
+      customColours[i-1] = `#${colour}`;
+    }
+  }
 
   return {
     langCount: Math.min(Math.max(count, 1), MAX_COUNT),
-    selectedTheme: THEMES[query.theme] || THEMES.default,
+    selectedTheme: {
+      bg: customBg,
+      text: customText,
+      colours: customColours
+    },
     chartTitle: query.hide_title === 'true' ? '' : (query.title || DEFAULT_CONFIG.TITLE),
     width: parseInt(query.width) || DEFAULT_CONFIG.WIDTH,
     height: parseInt(query.height) || DEFAULT_CONFIG.HEIGHT,
