@@ -75,6 +75,8 @@ export default async function handler(req, res) {
   const langCount = Math.min(Math.max(parseInt(count) || DEFAULT_COUNT, 1), 20);
   const selectedTheme = THEMES[theme] || THEMES.default;
   const chartTitle = hide_title === 'true' ? '' : (title || DEFAULT_TITLE);
+  const width = parseInt(req.query.width) || DEFAULT_WIDTH;
+  const height = parseInt(req.query.height) || DEFAULT_HEIGHT;
  
   try {
     const now = Date.now();
@@ -153,14 +155,14 @@ export default async function handler(req, res) {
     }).join('');
 
     const titleElement = chartTitle ? `
-      <text x="${DEFAULT_WIDTH/2}" y="${TITLE_Y}" text-anchor="middle" fill="${selectedTheme.text}" font-family="Arial" font-size="${TITLE_FONT_SIZE}">
+      <text x="${width/2}" y="${TITLE_Y}" text-anchor="middle" fill="${selectedTheme.text}" font-family="Arial" font-size="${TITLE_FONT_SIZE}">
         ${chartTitle}
       </text>
     ` : '';
 
     const svg = `
-      <svg width="${DEFAULT_WIDTH}" height="${DEFAULT_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-        <rect width="${DEFAULT_WIDTH}" height="${DEFAULT_HEIGHT}" fill="${selectedTheme.bg}" rx="10"/>
+      <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${width}" height="${height}" fill="${selectedTheme.bg}" rx="10"/>
         ${titleElement}
         ${segments}
         ${legend}
@@ -172,9 +174,9 @@ export default async function handler(req, res) {
   res.status(200).send(svg);
   } catch (error) {
      const errorSvg = `
-      <svg width="${DEFAULT_WIDTH}" height="${DEFAULT_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
-        <rect width="${DEFAULT_WIDTH}" height="${DEFAULT_HEIGHT}" fill="${selectedTheme.bg}" rx="10"/>
-        <text x="${DEFAULT_WIDTH/2}" y="${ERROR_TEXT_Y}" text-anchor="middle" fill="${ERROR_COLOUR}" font-family="Arial" font-size="${ERROR_FONT_SIZE}">
+      <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="${width}" height="${height}" fill="${selectedTheme.bg}" rx="10"/>
+        <text x="${width/2}" y="${ERROR_TEXT_Y}" text-anchor="middle" fill="${ERROR_COLOUR}" font-family="Arial" font-size="${ERROR_FONT_SIZE}">
           Error: ${error.message}
         </text>
       </svg>
