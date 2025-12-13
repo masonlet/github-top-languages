@@ -3,16 +3,19 @@ const DEFAULT_WIDTH = 400;
 const DEFAULT_HEIGHT = 300;
 const DEFAULT_TITLE = 'Top Languages'
 
+const DEFAULT_CHART_CENTER_X = 150;
+const DEFAULT_LEGEND_START_X = 270;
+
+const SHIFTED_CHART_CENTER_X = 100;
+const SHIFTED_LEGEND_START_X = 200;
+
 const TITLE_Y = 30;
 const TITLE_FONT_SIZE = 24;
 
-const CHART_CENTER_X = 150;
 const CHART_CENTER_Y = 170;
 const CHART_OUTER_RADIUS = 80;
 const CHART_INNER_RADIUS = 50;
 
-const LEGEND_START_X = 270;
-const LEGEND_TEXT_X = 287;
 const LEGEND_START_Y = 80;
 const LEGEND_ROW_HEIGHT = 25;
 const LEGEND_SQUARE_SIZE = 12;
@@ -72,7 +75,7 @@ const REFRESH_INTERVAL = 1000 * 60 * 60;
 export default async function handler(req, res) {
   const { count, theme, title, hide_title } = req.query;
 
-  const langCount = Math.min(Math.max(parseInt(count) || DEFAULT_COUNT, 1), 20);
+  const langCount = Math.min(Math.max(parseInt(count) || DEFAULT_COUNT, 1), 16);
   const selectedTheme = THEMES[theme] || THEMES.default;
   const chartTitle = hide_title === 'true' ? '' : (title || DEFAULT_TITLE);
   const width = parseInt(req.query.width) || DEFAULT_WIDTH;
@@ -128,27 +131,48 @@ export default async function handler(req, res) {
       throw new Error('No language data available');
     }
 
+    const isShifted = normalizedLanguages.length > 8;
+    
+    const chartX  = isShifted ? SHIFTED_CHART_CENTER_X : DEFAULT_CHART_CENTER_X;
+    const legendX = isShifted ? SHIFTED_LEGEND_START_X : DEFAULT_LEGEND_START_X;
+
     let currentAngle = 0;
     const segments = normalizedLanguages.map((lang, i) => {
       const isLast = i === normalizedLanguages.length - 1;
       const angle = isLast ? 360 - currentAngle : (lang.pct / 100) * 360;
 
       if (angle >= 359.99) {
-        const path = describeSegment(CHART_CENTER_X, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, 0, 359.9999);
+        const path = describeSegment(chartX, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, 0, 359.9999);
         currentAngle += angle;
         return `<path d="${path}" fill="${selectedTheme.colours[i]}"/>`;
       } 
 
-      const path = describeSegment(CHART_CENTER_X, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, currentAngle, currentAngle + angle);
+      const path = describeSegment(chartX, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, currentAngle, currentAngle + angle);
       currentAngle += angle;
       return `<path d="${path}" fill="${selectedTheme.colours[i]}"/>`;
     }).join('');
 
+    const rows = isShifted ? 2 : 1;
+    const itemsPerRow = Math.ceil(normalizedLanguages.length / rows);
+
     const legend = normalizedLanguages.map((lang, i) => {
-      const y = LEGEND_START_Y + (i * LEGEND_ROW_HEIGHT);
+      let x, y;
+
+      if (!isShifted) {
+        x = DEFAULT_LEGEND_START_X;
+        y = LEGEND_START_Y + i * LEGEND_ROW_HEIGHT;
+      } else {
+        const half = Math.ceil(normalizedLanguages.length / 2);
+        const col = i < half ? 0 : 1;
+        const row = i % half;
+
+        x = SHIFTED_LEGEND_START_X + col * 100;
+        y = LEGEND_START_Y + row * LEGEND_ROW_HEIGHT;
+      }
+
       return `
-        <rect x="${LEGEND_START_X}" y="${y - 10}" width="${LEGEND_SQUARE_SIZE}" height="${LEGEND_SQUARE_SIZE}" fill="${selectedTheme.colours[i]}" rx="2"/>
-        <text x="${LEGEND_TEXT_X}" y="${y}" fill="${selectedTheme.text}" font-size="${LEGEND_FONT_SIZE}" font-family="Arial">
+        <rect x="${x}" y="${y - 10}" width="${LEGEND_SQUARE_SIZE}" height="${LEGEND_SQUARE_SIZE}" fill="${selectedTheme.colours[i]}" rx="2"/>
+        <text x="${x + LEGEND_SQUARE_SIZE + 5}" y="${y}" fill="${selectedTheme.text}" font-size="${LEGEND_FONT_SIZE}" font-family="Arial">
           ${lang.lang} ${lang.pct.toFixed(1)}%
         </text>
       `;
