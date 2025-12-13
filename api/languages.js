@@ -65,8 +65,8 @@ Z
 `;    
 }
 
-let cachedSVGs = {};
-let lastRefreshTimes = {};
+let cachedLanguageData = null;
+let lastRefresh = 0;
 const REFRESH_INTERVAL = 1000 * 60 * 60;
 
 export default async function handler(req, res) {
@@ -76,43 +76,42 @@ export default async function handler(req, res) {
   const selectedTheme = THEMES[theme] || THEMES.default;
   const chartTitle = hide_title === 'true' ? '' : (title || DEFAULT_TITLE);
  
-  const now = Date.now();
-  const cacheKey = `${langCount}-${theme}-${chartTitle}`;
-  if (cachedSVGs[cacheKey] && now - (lastRefreshTimes[cacheKey] || 0) < REFRESH_INTERVAL){
-    res.setHeader('Content-Type', 'image/svg+xml');
-    return res.status(200).send(cachedSVGs[cacheKey]);
-  }
-
   try {
-    const username = process.env.GITHUB_USERNAME;
-    if(!username) throw new Error(`No user called`);
+    const now = Date.now();
 
-    const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
-    if(!reposResponse.ok) throw new Error(`GitHub API error: ${reposResponse.status}`);
+    if (!cachedLanguageData || now - lastRefresh >= REFRESH_INTERVAL) {
+      const username = process.env.GITHUB_USERNAME;
+      if(!username) throw new Error(`No user called`);
 
-    const repos = await reposResponse.json();
-    const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
-    const filteredRepos = repos.filter(
-      repo => !repo.fork && !ignored.includes(repo.name)
-    );
+      const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
+      if(!reposResponse.ok) throw new Error(`GitHub API error: ${reposResponse.status}`);
 
-    const languageFetches = filteredRepos.map(repo =>
-      fetch(`https://api.github.com/repos/${repo.full_name}/languages`)
+      const repos = await reposResponse.json();
+      const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
+      const filteredRepos = repos.filter(
+        repo => !repo.fork && !ignored.includes(repo.name)
+      );
+
+      const languageFetches = filteredRepos.map(repo =>
+        fetch(`https://api.github.com/repos/${repo.full_name}/languages`)
         .then(r => r.ok ? r.json() : {})
-    );
+      );
 
-    const langResults = await Promise.all(languageFetches);
-    const languageBytes = {};
+      const langResults = await Promise.all(languageFetches);
+      const languageBytes = {};
 
-    for (const languages of langResults) {
-      for (const [lang, bytes] of Object.entries(languages)) {
-        languageBytes[lang] = (languageBytes[lang] || 0) + bytes;
+      for (const languages of langResults) {
+        for (const [lang, bytes] of Object.entries(languages)) {
+          languageBytes[lang] = (languageBytes[lang] || 0) + bytes;
+        }
       }
+
+      cachedLanguageData = languageBytes;
+      lastRefresh = now;
     }
 
-    const totalBytes = Object.values(languageBytes).reduce((a, b) => a + b, 0);
-
-    const sortedLanguages = Object.entries(languageBytes)
+    const totalBytes = Object.values(cachedLanguageData).reduce((a, b) => a + b, 0);
+    const sortedLanguages = Object.entries(cachedLanguageData)
       .map(([lang, bytes]) => ({ lang, pct: (bytes / totalBytes) * 100 }))
       .sort((a, b) => b.pct - a.pct);
 
@@ -123,14 +122,24 @@ export default async function handler(req, res) {
       pct: (lang.pct / totalPct) * 100
     }));
 
+    if(normalizedLanguages.length === 0) {
+      throw new Error('No language data available');
+    }
+
     let currentAngle = 0;
     const segments = normalizedLanguages.map((lang, i) => {
       const isLast = i === normalizedLanguages.length - 1;
       const angle = isLast ? 360 - currentAngle : (lang.pct / 100) * 360;
-      const pathD = describeSegment(CHART_CENTER_X, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, currentAngle, currentAngle + angle);
-      currentAngle += angle;
 
-      return `<path d="${pathD}" fill="${selectedTheme.colours[i]}"/>`;
+      if (angle >= 359.99) {
+        const path = describeSegment(CHART_CENTER_X, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, 0, 359.9999);
+        currentAngle += angle;
+        return `<path d="${path}" fill="${selectedTheme.colours[i]}"/>`;
+      } 
+
+      const path = describeSegment(CHART_CENTER_X, CHART_CENTER_Y, CHART_INNER_RADIUS, CHART_OUTER_RADIUS, currentAngle, currentAngle + angle);
+      currentAngle += angle;
+      return `<path d="${path}" fill="${selectedTheme.colours[i]}"/>`;
     }).join('');
 
     const legend = normalizedLanguages.map((lang, i) => {
@@ -158,10 +167,8 @@ export default async function handler(req, res) {
       </svg>
     `;
 
-  cachedSVGs[cacheKey] = svg;
-  lastRefreshTimes[cacheKey] = now;
   res.setHeader('Content-Type', 'image/svg+xml');
-  res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=60');
+  res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60');
   res.status(200).send(svg);
   } catch (error) {
      const errorSvg = `
