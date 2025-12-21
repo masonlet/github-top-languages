@@ -4,6 +4,7 @@ import {
   MAX_COUNT,
   REFRESH_INTERVAL
 } from './constants.js';
+import { sanitize } from './utils.js';
 
 export function parseQueryParams(query) {
   const count = parseInt(query.count || query.langCount) || DEFAULT_CONFIG.COUNT;
@@ -25,7 +26,7 @@ export function parseQueryParams(query) {
       text: customText,
       colours: customColours
     },
-    chartTitle: query.hide_title === 'true' ? '' : (query.title || DEFAULT_CONFIG.TITLE),
+    chartTitle: query.hide_title === 'true' ? '' : sanitize(query.title || DEFAULT_CONFIG.TITLE),
     width: parseInt(query.width) || DEFAULT_CONFIG.WIDTH,
     height: parseInt(query.height) || DEFAULT_CONFIG.HEIGHT,
   }
