@@ -43,34 +43,32 @@ export async function fetchLanguageData() {
   }
 
   const username = process.env.GITHUB_USERNAME;
-  if(!username) throw new Error(`No user called`);
+  if(!username) throw new Error(`Configuration Error: GITHUB_USERNAME environment variable is not set.`);
 
   const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
-  if(!reposResponse.ok) throw new Error(`GitHub API error: ${reposResponse.status}`);
+  if(!reposResponse.ok) throw new Error(`GitHub API error: ${reposResponse.status} ${reposResponse.statusText}`);
 
   const repos = await reposResponse.json();
   const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
-  const filteredRepos = repos.filter(
-    repo => !repo.fork && !ignored.includes(repo.name)
-  );
+
+  const filteredRepos = repos.filter(repo => !repo.fork && !ignored.includes(repo.name));
 
   const languageFetches = filteredRepos.map(repo =>
     fetch(`https://api.github.com/repos/${repo.full_name}/languages`)
-    .then(r => r.ok ? r.json() : {})
+      .then(r => r.ok ? r.json() : {})
   );
 
   const langResults = await Promise.all(languageFetches);
-  const languageBytes = {};
 
-  for (const languages of langResults) {
+  cachedLanguageData = langResults.reduce((acc, languages) => {
     for (const [lang, bytes] of Object.entries(languages)) {
-      languageBytes[lang] = (languageBytes[lang] || 0) + bytes;
+      acc[lang] = (acc[lang] || 0) + bytes;
     }
-  }
+    return acc;
+  }, {});
 
-  cachedLanguageData = languageBytes;
   lastRefresh = now;
-  return languageBytes;
+  return cachedLanguageData;
 }
 
 export function processLanguageData(languageBytes, langCount){
