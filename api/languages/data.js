@@ -29,15 +29,20 @@ export function parseQueryParams(query) {
     chartTitle: query.hide_title === 'true' ? '' : sanitize(query.title || DEFAULT_CONFIG.TITLE),
     width: parseInt(query.width) || DEFAULT_CONFIG.WIDTH,
     height: parseInt(query.height) || DEFAULT_CONFIG.HEIGHT,
+    useTestData: query.test === 'true'   
   }
 }
 
 let cachedLanguageData = null;
 let lastRefresh = 0;
 
-export async function fetchLanguageData() {
-  const now = Date.now();
+export async function fetchLanguageData(useTestData = false) {
+  if (useTestData) {
+    const testData = await import ('./test-data.json', { with: { type: 'json' } });
+    return testData.default;
+  }
 
+  const now = Date.now();
   if (cachedLanguageData && now - lastRefresh < REFRESH_INTERVAL) {
     return cachedLanguageData;
   }
