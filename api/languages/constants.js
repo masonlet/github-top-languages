@@ -62,4 +62,3 @@ export const THEMES = {
 export const REFRESH_INTERVAL = 1000 * 60 * 60;
 export const MAX_COUNT = 16;
 export const LEGEND_SHIFT_THRESHOLD = 8;
-export const FULL_CIRCLE_ANGLE = 359.9999;

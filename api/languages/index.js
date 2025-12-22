@@ -1,5 +1,5 @@
 import { parseQueryParams, fetchLanguageData, processLanguageData } from './data.js';
-import { createDonutSegments } from './geometry.js';
+import { createDonutSegments } from './geometry/donut.js';
 import { createLegend } from './legend.js';
 import { renderSvg, renderError } from './render.js';
 import { 
