@@ -4,7 +4,7 @@ import {
   MAX_COUNT,
   REFRESH_INTERVAL
 } from './constants.js';
-import { sanitize } from './utils.js';
+import { sanitize } from './sanitize.js';
 
 export function parseQueryParams(query) {
   const count = parseInt(query.count || query.langCount) || DEFAULT_CONFIG.COUNT;

@@ -1,15 +1,5 @@
-import { THEMES, ERROR_STYLES } from './constants.js';
+import { THEMES, ERROR_STYLES } from '../constants.js';
 
-export function renderSvg(width, height, background, titleElement, segments, legend) {
-  return `
-    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="${width}" height="${height}" fill="${background}" rx="10"/>
-    ${titleElement}
-    ${segments}
-    ${legend}
-    </svg>
-  `;
-}
 export function renderError(message, width, height, selectedTheme){
   const background = selectedTheme?.bg || THEMES.default.bg; 
   return `
