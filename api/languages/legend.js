@@ -1,22 +1,20 @@
-import { LAYOUT, LEGEND_STYLES } from './constants.js';
+import { LEGEND_STYLES } from './constants.js';
 
-export function createLegend(languages, isShifted, selectedTheme) {
-  const legendLayout = isShifted ? LAYOUT.SHIFTED : LAYOUT.DEFAULT;
-  const legendXBase = legendLayout.LEGEND_START_X;
+export function createLegend(languages, isShifted, selectedTheme, legendStartX) {
   const numLangs = languages.length;
 
   return languages.map((lang, i) => {
     let x, y;
 
     if (!isShifted) {
-      x = legendXBase;
+      x = legendStartX;
       y = LEGEND_STYLES.START_Y + i * LEGEND_STYLES.ROW_HEIGHT;
     } else {
       const half = Math.ceil(numLangs / 2);
       const col = Math.floor(i / half);
       const row = i % half;
 
-      x = legendXBase + col * 100;
+      x = legendStartX + col * LEGEND_STYLES.COLUMN_WIDTH;
       y = LEGEND_STYLES.START_Y + row * LEGEND_STYLES.ROW_HEIGHT;
     }
 

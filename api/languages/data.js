@@ -29,7 +29,7 @@ export function parseQueryParams(query) {
       text: customText,
       colours: customColours
     },
-    width: parseInt(query.width) || DEFAULT_CONFIG.WIDTH,
+    width: Math.max(parseInt(query.width) || DEFAULT_CONFIG.WIDTH, DEFAULT_CONFIG.MIN_WIDTH),
     height: parseInt(query.height) || DEFAULT_CONFIG.HEIGHT,
     useTestData: query.test === 'true'   
   }

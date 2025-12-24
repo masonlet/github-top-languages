@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
   try {
     const languageBytes = await fetchLanguageData(useTestData);
-    const { segments, legend } = generateChartData(languageBytes, langCount, selectedTheme, chartType);
+    const { segments, legend } = generateChartData(languageBytes, langCount, selectedTheme, chartType, width);
     
     const svg = renderSvg(width, height, selectedTheme.bg, segments, legend, chartTitle, selectedTheme.text);
     res.setHeader('Content-Type', 'image/svg+xml');

@@ -2,15 +2,33 @@ import { processLanguageData } from './data.js';
 import { createDonutSegments } from './geometry/donut.js';
 import { createLegend } from './legend.js';
 import { 
-  LAYOUT, 
   DONUT_GEOMETRY, 
-  LEGEND_SHIFT_THRESHOLD
+  LEGEND_SHIFT_THRESHOLD,
+  LEGEND_STYLES
 } from './constants.js';
 
-function generateDonutChart(normalizedLanguages, selectedTheme) {
+function calculateDonutCenter(width, isShifted) {
+  const legendWidth = isShifted
+    ? LEGEND_STYLES.COLUMN_WIDTH * 2
+    : LEGEND_STYLES.WIDTH;
+
+  const availableSpace = width - legendWidth - DONUT_GEOMETRY.MARGIN_RIGHT;
+
+  return availableSpace / 2;
+}
+
+function calculateLegendStartX(chartCenterX, donutRadius, isShifted) {
+  const legendWidth = isShifted
+    ? LEGEND_STYLES.COLUMN_WIDTH * 2
+    : LEGEND_STYLES.WIDTH;
+
+  return chartCenterX + donutRadius + DONUT_GEOMETRY.MARGIN_RIGHT;
+}
+
+function generateDonutChart(normalizedLanguages, selectedTheme, width) {
   const isShifted = normalizedLanguages.length > LEGEND_SHIFT_THRESHOLD;
-  const currentLayout = isShifted ? LAYOUT.SHIFTED : LAYOUT.DEFAULT;
-  const chartX = currentLayout.CHART_CENTER_X;
+  const chartX = calculateDonutCenter(width, isShifted);
+  const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS, isShifted);
 
   const segments = createDonutSegments(
     normalizedLanguages,
@@ -22,19 +40,20 @@ function generateDonutChart(normalizedLanguages, selectedTheme) {
   const legend = createLegend(
     normalizedLanguages,
     isShifted,
-    selectedTheme
+    selectedTheme,
+    legendStartX
   )
 
   return { segments, legend };
 }
 
-export function generateChartData(languageBytes, langCount, selectedTheme, chartType) {
+export function generateChartData(languageBytes, langCount, selectedTheme, chartType, width) {
   const normalizedLanguages = processLanguageData(languageBytes, langCount);
 
   switch (chartType) {
     case 'donut':
-      return generateDonutChart(normalizedLanguages, selectedTheme);
+      return generateDonutChart(normalizedLanguages, selectedTheme, width);
     default:
-      return generateDonutChart(normalizedLanguages, selectedTheme);  
+      return generateDonutChart(normalizedLanguages, selectedTheme, width);  
   }
 }
