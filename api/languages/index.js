@@ -4,11 +4,11 @@ import { renderSvg } from './render/svg.js';
 import { renderError } from './render/error.js';
 
 export default async function handler(req, res) {
-  const { langCount, selectedTheme, chartTitle, width, height, useTestData } = parseQueryParams(req.query);
+  const { chartType, chartTitle, langCount, selectedTheme, width, height, useTestData } = parseQueryParams(req.query);
 
   try {
     const languageBytes = await fetchLanguageData(useTestData);
-    const { segments, legend } = generateChartData(languageBytes, langCount, selectedTheme);
+    const { segments, legend } = generateChartData(languageBytes, langCount, selectedTheme, chartType);
     
     const svg = renderSvg(width, height, selectedTheme.bg, segments, legend, chartTitle, selectedTheme.text);
     res.setHeader('Content-Type', 'image/svg+xml');

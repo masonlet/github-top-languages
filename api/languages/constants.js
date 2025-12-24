@@ -16,12 +16,6 @@ export const LAYOUT = {
   }
 }
 
-export const DONUT_GEOMETRY = {
-  CENTER_Y: 170,
-  OUTER_RADIUS: 80,
-  INNER_RADIUS: 50
-}
-
 export const TITLE_STYLES = {
   TEXT_Y: 30,
   FONT_SIZE: 24
@@ -58,6 +52,14 @@ export const THEMES = {
     colours: ['#ff6b6b', '#4ecdc3', '#45b7d1', '#ffa07a', '#98d8c8', '#f7dc6f', '#bb8fce', '#85c1e2']
   }
 };
+
+export const VALID_TYPES = ['donut'];
+
+export const DONUT_GEOMETRY = {
+  CENTER_Y: 170,
+  OUTER_RADIUS: 80,
+  INNER_RADIUS: 50
+}
 
 export const REFRESH_INTERVAL = 1000 * 60 * 60;
 export const MAX_COUNT = 16;

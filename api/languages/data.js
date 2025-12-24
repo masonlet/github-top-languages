@@ -2,7 +2,8 @@ import {
   DEFAULT_CONFIG,
   THEMES,
   MAX_COUNT,
-  REFRESH_INTERVAL
+  REFRESH_INTERVAL,
+  VALID_TYPES
 } from './constants.js';
 import { sanitize } from './sanitize.js';
 
@@ -20,13 +21,14 @@ export function parseQueryParams(query) {
   }
 
   return {
+    chartType: VALID_TYPES.includes(query.type) ? query.type : 'donut',
+    chartTitle: query.hide_title === 'true' ? '' : sanitize(query.title || DEFAULT_CONFIG.TITLE),
     langCount: Math.min(Math.max(count, 1), MAX_COUNT),
     selectedTheme: {
       bg: customBg,
       text: customText,
       colours: customColours
     },
-    chartTitle: query.hide_title === 'true' ? '' : sanitize(query.title || DEFAULT_CONFIG.TITLE),
     width: parseInt(query.width) || DEFAULT_CONFIG.WIDTH,
     height: parseInt(query.height) || DEFAULT_CONFIG.HEIGHT,
     useTestData: query.test === 'true'   
