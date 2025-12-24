@@ -2,24 +2,8 @@ export const DEFAULT_CONFIG = {
   TITLE: 'Top Languages',
   WIDTH: 400,
   HEIGHT: 300,
-  COUNT: 8
-}
-
-export const LAYOUT = {
-  DEFAULT: {
-    CHART_CENTER_X: 150,
-    LEGEND_START_X: 270
-  },
-  SHIFTED: {
-    CHART_CENTER_X: 100,
-    LEGEND_START_X: 200
-  }
-}
-
-export const DONUT_GEOMETRY = {
-  CENTER_Y: 170,
-  OUTER_RADIUS: 80,
-  INNER_RADIUS: 50
+  COUNT: 8,
+  MIN_WIDTH: 350
 }
 
 export const TITLE_STYLES = {
@@ -32,7 +16,9 @@ export const LEGEND_STYLES = {
   ROW_HEIGHT: 25,
   SQUARE_SIZE: 12,
   SQUARE_RADIUS: 2,
-  FONT_SIZE: 11
+  FONT_SIZE: 11,
+  WIDTH: 130,
+  COLUMN_WIDTH: 100
 }
 
 export const ERROR_STYLES = {
@@ -59,7 +45,15 @@ export const THEMES = {
   }
 };
 
+export const VALID_TYPES = ['donut'];
+
+export const DONUT_GEOMETRY = {
+  CENTER_Y: 170,
+  OUTER_RADIUS: 80,
+  INNER_RADIUS: 50,
+  MARGIN_RIGHT: 20
+}
+
 export const REFRESH_INTERVAL = 1000 * 60 * 60;
 export const MAX_COUNT = 16;
 export const LEGEND_SHIFT_THRESHOLD = 8;
-export const FULL_CIRCLE_ANGLE = 359.9999;
