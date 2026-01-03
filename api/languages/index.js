@@ -1,15 +1,19 @@
-import { parseQueryParams, fetchLanguageData } from './data.js';
+import { parseQueryParams } from './utils/params.js';
+import { fetchLanguageData, processLanguageData } from './api/github.js';
 import { generateChartData } from './chart.js';
 import { renderSvg } from './render/svg.js';
 import { renderError } from './render/error.js';
 
 export default async function handler(req, res) {
-  const { chartType, chartTitle, langCount, selectedTheme, width, height, useTestData } = parseQueryParams(req.query);
+  const params = parseQueryParams(req.query);
+  const { width, height, selectedTheme, langCount, chartType, chartTitle, useTestData } = params;
 
   try {
-    const languageBytes = await fetchLanguageData(useTestData);
-    const { segments, legend } = generateChartData(languageBytes, langCount, selectedTheme, chartType, width);
-    
+    const rawData = await fetchLanguageData(useTestData);
+    const normalizedData = processLanguageData(rawData, langCount);
+
+    const { segments, legend } = generateChartData(normalizedData, selectedTheme, chartType, width);
+
     const svg = renderSvg(width, height, selectedTheme.bg, segments, legend, chartTitle, selectedTheme.text);
     res.setHeader('Content-Type', 'image/svg+xml');
     res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60');
