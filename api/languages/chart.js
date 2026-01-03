@@ -1,13 +1,10 @@
-import { processLanguageData } from './data.js';
 import { generateDonutChart } from './charts/donut.js';
 
-export function generateChartData(languageBytes, langCount, selectedTheme, chartType, width) {
-  const normalizedLanguages = processLanguageData(languageBytes, langCount);
+const CHART_GENERATORS = {
+  donut: generateDonutChart,
+}
 
-  switch (chartType) {
-    case 'donut':
-      return generateDonutChart(normalizedLanguages, selectedTheme, width);
-    default:
-      return generateDonutChart(normalizedLanguages, selectedTheme, width);  
-  }
+export function generateChartData(data, selectedTheme, chartType, width) {
+  const generator = CHART_GENERATORS[chartType] || CHART_GENERATORS.donut;
+  return generator(data, selectedTheme, width);
 }
