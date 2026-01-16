@@ -4,5 +4,6 @@
   "description": "Github Top Langauges card generator",
   "main": "index.js",
   "author": "Mason L'Etoile",
-  "license": "MIT"
+  "license": "MIT",
+  "type": "module"
 }
