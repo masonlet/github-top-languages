@@ -1,7 +1,9 @@
-import { createDonutSegments } from '../geometry/donut.js';
+import { createDonutSegments } from './geometry/donut.js';
+import {
+  DONUT_GEOMETRY
+} from '../constants/donut.js';
 import { createLegend } from '../legend.js';
 import { 
-  DONUT_GEOMETRY, 
   LEGEND_SHIFT_THRESHOLD,
   LEGEND_STYLES
 } from '../constants.js';

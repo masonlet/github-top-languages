@@ -1,0 +1,1 @@
+export const FULL_CIRCLE_ANGLE = 359.9999;

@@ -1,0 +1,6 @@
+export const DONUT_GEOMETRY = {
+  CENTER_Y: 170,
+  OUTER_RADIUS: 80,
+  INNER_RADIUS: 50,
+  MARGIN_RIGHT: 20
+}
