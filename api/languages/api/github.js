@@ -1,4 +1,4 @@
-import { REFRESH_INTERVAL } from '../constants.js';
+import { REFRESH_INTERVAL } from '../constants/config.js';
 
 let cachedLanguageData = null;
 let lastRefresh = 0;

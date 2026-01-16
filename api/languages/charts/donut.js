@@ -2,11 +2,11 @@ import { createDonutSegments } from './geometry/donut.js';
 import {
   DONUT_GEOMETRY
 } from '../constants/donut.js';
-import { createLegend } from '../legend.js';
-import { 
+import { createLegend } from './legend.js';
+import {
   LEGEND_SHIFT_THRESHOLD,
   LEGEND_STYLES
-} from '../constants.js';
+} from '../constants/styles.js';
 
 function calculateDonutCenter(width, isShifted) {
   const legendWidth = isShifted

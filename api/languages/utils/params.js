@@ -1,10 +1,6 @@
-import {
-  DEFAULT_CONFIG,
-  THEMES,
-  MAX_COUNT,
-  VALID_TYPES
-} from '../constants.js';
-
+import { DEFAULT_CONFIG, MAX_COUNT } from '../constants/config.js';
+import { THEMES } from '../constants/themes.js';
+import { VALID_TYPES } from '../constants/types.js';
 import { sanitize } from './sanitize.js';
 
 export function parseQueryParams(query) {
