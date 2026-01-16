@@ -43,7 +43,7 @@ Append these query parameters to the URL to customize the look and data of your 
 | `bg` | String | Sets the chart background colour. Accepts hex (`ffffff`) or theme names (`dark`, `light`). | `default` | `?bg=dark` |
 | `text` | String | Sets the chart text colour. Accepts hex (`ffffff`). | `#000000` | `?text=ffffff` |
 | `c1`-`c16` | String | Sets individual colours for languages 1-16. Accepts hex codes. | Auto-assigned | `?c1=ff0000&c2=00ff00` |
-
+| `test` | Boolean | Uses samples data instead of fetching from GitHub API. | `false` | `?test=true` |
 
 #### Example URL
 To get 10 languages, a dark theme, and a custom title:
@@ -74,7 +74,7 @@ Copy `.env.example` to `.env`, and update the variables.
 
 ### Running Locally
 ```bash
-npm run dev
+vercel dev
 # Your endpoint will be available at https://localhost:3000/api/languages (or your configured port)
 ```
 

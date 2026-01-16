@@ -5,7 +5,7 @@ let lastRefresh = 0;
 
 export async function fetchLanguageData(useTestData = false) {
   if (useTestData) {
-    const testData = await import ('./test-data.json', { with: { type: 'json' } });
+    const testData = await import ('../data/test-data.json', { with: { type: 'json' } });
     return testData.default;
   }
 
