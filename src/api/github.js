@@ -10,15 +10,15 @@ export async function fetchLanguageData(useTestData = false) {
   }
 
   const now = Date.now();
-  if (cachedLanguageData && now - lastRefresh < REFRESH_INTERVAL) {
+  if (cachedLanguageData && now - lastRefresh < REFRESH_INTERVAL) 
     return cachedLanguageData;
-  }
 
   const username = process.env.GITHUB_USERNAME;
-  if(!username) throw new Error(`Configuration Error: GITHUB_USERNAME environment variable is not set.`);
+  if(!username) throw new Error(`GITHUB_USERNAME environment variable is not set`);
 
   const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
-  if(!reposResponse.ok) throw new Error(`GitHub API error: ${reposResponse.status} ${reposResponse.statusText}`);
+  if(!reposResponse.ok) 
+    throw new Error(`GitHub API error: ${reposResponse.status} ${reposResponse.statusText}`);
 
   const repos = await reposResponse.json();
   const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
@@ -44,6 +44,9 @@ export async function fetchLanguageData(useTestData = false) {
 }
 
 export function processLanguageData(languageBytes, langCount){
+  if(Object.keys(languageBytes).length === 0)
+    throw new Error('No language data available');
+
   const totalBytes = Object.values(languageBytes).reduce((a, b) => a + b, 0);
   
   const sortedLanguages = Object.entries(languageBytes)
@@ -51,10 +54,6 @@ export function processLanguageData(languageBytes, langCount){
     .sort((a, b) => b.pct - a.pct);
 
   const topLanguages = sortedLanguages.slice(0, langCount);
-
-  if (topLanguages.length === 0){
-    throw new Error('No language data available');
-  }
 
   const totalPct = topLanguages.reduce((sum, lang) => sum + lang.pct, 0);
   return topLanguages.map(lang => ({
