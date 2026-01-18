@@ -8,4 +8,3 @@ export const sanitize = (str) => {
     "'": '&#39;'
   }[m]));
 };
-
