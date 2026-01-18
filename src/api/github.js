@@ -61,3 +61,8 @@ export function processLanguageData(languageBytes, langCount){
     pct: (lang.pct / totalPct) * 100
   }));
 }
+
+export function resetCache() {
+  cachedLanguageData = null;
+  lastRefresh = 0;
+}
