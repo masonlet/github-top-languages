@@ -3,12 +3,17 @@ import { THEMES } from '../constants/themes.js';
 import { VALID_TYPES } from '../constants/types.js';
 import { sanitize } from './sanitize.js';
 
+const parseIntSafe = (val, fallback) => {
+  const parsed = Number.parseInt(val, 10);
+  return Number.isNaN(parsed) ? fallback : parsed;
+}
+
 export function parseQueryParams(query) {
-  const count = parseInt(query.count || query.langCount) || DEFAULT_CONFIG.COUNT;
-  const customTheme = THEMES[query.theme] || THEMES.default;
-  const customText = query.text || customTheme.text;
-  const customBg = THEMES[query.bg]?.bg || query.bg || customTheme.bg;
-  const customColours = [...customTheme.colours];
+  const baseTheme = THEMES[query.theme] ?? THEMES.default;
+
+  const count = parseIntSafe(query.count ?? query.langCount, DEFAULT_CONFIG.COUNT);
+
+  const customColours = [...baseTheme.colours];
   for (let i = 1; i <= MAX_COUNT; i++) {
     if(query[`c${i}`]) {
       const colour = query[`c${i}`].replace(/^#/, '');
@@ -18,16 +23,15 @@ export function parseQueryParams(query) {
 
   return {
     chartType: VALID_TYPES.includes(query.type) ? query.type : 'donut',
-    chartTitle: query.hide_title === 'true' ? '' : sanitize(query.title || DEFAULT_CONFIG.TITLE),
+    chartTitle: query.hide_title === 'true' ? '' : sanitize(query.title ?? DEFAULT_CONFIG.TITLE),
     langCount: Math.min(Math.max(count, 1), MAX_COUNT),
     selectedTheme: {
-      bg: customBg,
-      text: customText,
+      bg: THEMES[query.bg]?.bg ?? query.bg ?? baseTheme.bg,
+      text: query.text ?? baseTheme.text,
       colours: customColours
     },
-    width: Math.max(parseInt(query.width) || DEFAULT_CONFIG.WIDTH, DEFAULT_CONFIG.MIN_WIDTH),
-    height: parseInt(query.height) || DEFAULT_CONFIG.HEIGHT,
+    width: Math.max(parseIntSafe(query.width,  DEFAULT_CONFIG.WIDTH), DEFAULT_CONFIG.MIN_WIDTH),
+    height: parseIntSafe(query.height, DEFAULT_CONFIG.HEIGHT),
     useTestData: query.test === 'true'   
   }
 }
-

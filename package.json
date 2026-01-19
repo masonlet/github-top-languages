@@ -3,7 +3,16 @@
   "version": "0.0.1",
   "description": "Github Top Langauges card generator",
   "main": "index.js",
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage"
+  },
   "author": "Mason L'Etoile",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.17",
+    "vitest": "^4.0.17"
+  }
 }

@@ -2,6 +2,8 @@
 
 Generate a top languages chart for your GitHub profile that you can embed in a README or website.
 
+[![Tests](https://github.com/masonlet/github-top-languages/actions/workflows/tests.yml/badge.svg)](https://github.com/masonlet/github-top-languages/actions/workflows/tests.yml)
+
 ![Example Top Languages Chart](images/display.png)
 
 ## Features
