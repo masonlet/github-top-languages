@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import handler from "../../../api/languages/index.js";
 import { parseQueryParams } from "../../../src/utils/params.js";
 import { fetchLanguageData, processLanguageData } from "../../../src/api/github.js";
-import { generateChartData } from "../../../src/charts/chart.js";
+import { generateChartData } from "../../../src/render/chart.js";
 import { renderSvg } from "../../../src/render/svg.js";
 import { renderError } from "../../../src/render/error.js";
 
 vi.mock("../../../src/utils/params.js");
 vi.mock("../../../src/api/github.js");
-vi.mock("../../../src/charts/chart.js");
+vi.mock("../../../src/render/chart.js");
 vi.mock("../../../src/render/svg.js");
 vi.mock("../../../src/render/error.js");
 

@@ -1,4 +1,4 @@
-import { generateDonutChart } from './donut.js';
+import { generateDonutChart } from '../charts/donut.js';
 
 const CHART_GENERATORS = {
   donut: generateDonutChart,

@@ -3,8 +3,7 @@ import {
   polarToCartesian,
   describeSegment,
   createDonutSegments
-} from "../../../src/charts/geometry/donut.js";
-import { FULL_CIRCLE_ANGLE } from "../../../src/charts/geometry/constants.js";
+} from "../../src/charts/geometry.js";
 
 const mockGeometry = { CENTER_Y: 100, INNER_RADIUS: 30, OUTER_RADIUS: 50 };
 

@@ -4,3 +4,5 @@ export const DONUT_GEOMETRY = {
   INNER_RADIUS: 50,
   MARGIN_RIGHT: 20
 }
+
+export const FULL_CIRCLE_ANGLE = 359.9999;

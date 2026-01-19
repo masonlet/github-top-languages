@@ -1,4 +1,4 @@
-import { FULL_CIRCLE_ANGLE } from './constants.js';
+import { FULL_CIRCLE_ANGLE } from '../constants/geometry.js';
 
 export const polarToCartesian = (cx, cy, r, angleDeg) => {
   const angleRad = (angleDeg - 90) * Math.PI / 180;

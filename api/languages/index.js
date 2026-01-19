@@ -1,6 +1,6 @@
 import { parseQueryParams } from '../../src/utils/params.js';
 import { fetchLanguageData, processLanguageData } from '../../src/api/github.js';
-import { generateChartData } from '../../src/charts/chart.js';
+import { generateChartData } from '../../src/render/chart.js';
 import { renderSvg } from '../../src/render/svg.js';
 import { renderError } from '../../src/render/error.js';
 

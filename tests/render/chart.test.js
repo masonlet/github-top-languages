@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { generateChartData } from "../../src/charts/chart.js";
+import { generateChartData } from "../../src/render/chart.js";
 import { generateDonutChart } from "../../src/charts/donut.js";
 
 vi.mock("../../src/charts/donut.js", () => ({
