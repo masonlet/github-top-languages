@@ -3,8 +3,15 @@
 Generate a top languages chart for your GitHub profile that you can embed in a README or website.
 
 [![Tests](https://github.com/masonlet/github-top-languages/actions/workflows/tests.yml/badge.svg)](https://github.com/masonlet/github-top-languages/actions/workflows/tests.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
 ![Example Top Languages Chart](images/display.png)
+
+## Table of Contents
+- [Features](#features)
+- [Usage](#usage)
+- [Deployment & Configuration](#deployment--configuration)
+- [License](#license)
 
 ## Features
 - Generates a donut chart of your top programming languages (up to 16).
