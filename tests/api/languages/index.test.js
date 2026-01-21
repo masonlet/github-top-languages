@@ -28,7 +28,7 @@ describe("handler", () => {
       chartTitle: "Languages",
       width: 600,
       height: 400,
-      langCount: 5,
+      count: 5,
       selectedTheme: { bg: "#fff", text: "#000" },
       stroke: false,
       useTestData: false

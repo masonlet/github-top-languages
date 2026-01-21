@@ -6,11 +6,11 @@ import { renderError } from "../../src/render/error.js";
 
 export default async function handler(req, res) {
   const params = parseQueryParams(req.query);
-  const { chartType, chartTitle, width, height, langCount, selectedTheme, stroke, useTestData } = params;
+  const { chartType, chartTitle, width, height, count, selectedTheme, stroke, useTestData } = params;
 
   try {
     const rawData = await fetchLanguageData(useTestData);
-    const normalizedData = processLanguageData(rawData, langCount);
+    const normalizedData = processLanguageData(rawData, count);
 
     const { segments, legend } = generateChartData(normalizedData, selectedTheme, chartType, width, stroke);
 

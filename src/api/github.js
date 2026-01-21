@@ -43,7 +43,7 @@ export async function fetchLanguageData(useTestData = false) {
   return cachedLanguageData;
 }
 
-export function processLanguageData(languageBytes, langCount){
+export function processLanguageData(languageBytes, count){
   if(Object.keys(languageBytes).length === 0)
     throw new Error("No language data available");
 
@@ -53,7 +53,7 @@ export function processLanguageData(languageBytes, langCount){
     .map(([lang, bytes]) => ({ lang, pct: (bytes / totalBytes) * 100 }))
     .sort((a, b) => b.pct - a.pct);
 
-  const topLanguages = sortedLanguages.slice(0, langCount);
+  const topLanguages = sortedLanguages.slice(0, count);
 
   const totalPct = topLanguages.reduce((sum, lang) => sum + lang.pct, 0);
   return topLanguages.map(lang => ({

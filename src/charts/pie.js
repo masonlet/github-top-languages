@@ -23,15 +23,15 @@ export function generatePieChart(normalizedLanguages, selectedTheme, width, stro
   const isShifted = normalizedLanguages.length > LEGEND_SHIFT_THRESHOLD;
   const chartX = calculatePieCenter(width, isShifted);
   const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS);
-
   const pieGeometry = { ...DONUT_GEOMETRY, INNER_RADIUS: 0 };
+  const useStroke = normalizedLanguages.length > 1 ? stroke : false;
 
   const segments = createDonutSegments(
     normalizedLanguages,
     chartX,
     pieGeometry,
     selectedTheme.colours,
-    stroke
+    useStroke
   );
 
   const legend = createLegend(
