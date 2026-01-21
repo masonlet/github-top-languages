@@ -22,6 +22,11 @@ describe("donut geometry", () => {
     expect(path).toMatch(/Z$/);
   });
 
+  it("describeSegment: filled pie starts at center", () => {
+    const path = describeSegment(100, 100, 0, 50, 0, 90);
+    expect(path.startsWith("M 100 100")).toBe(true);
+  });
+
   it("describeSegment: segments have stroke when enabled", () => {
     const paths = createDonutSegments(
       [{ pct: 50 }],

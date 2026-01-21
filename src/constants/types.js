@@ -1,1 +1,1 @@
-export const VALID_TYPES = ["donut"];
+export const VALID_TYPES = ["donut", "pie"];
