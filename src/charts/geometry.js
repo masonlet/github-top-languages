@@ -9,6 +9,15 @@ export const polarToCartesian = (cx, cy, r, angleDeg) => {
 };
 
 export const describeSegment = (cx, cy, innerR, outerR, startAngle, endAngle) => {
+  const angleDiff = endAngle - startAngle
+
+  if (angleDiff >= 360 || angleDiff <= -360) {
+    const midAngle = startAngle + 180;
+    const firstHalf = describeSegment(cx, cy, innerR, outerR, startAngle, midAngle);
+    const secondHalf = describeSegment(cx, cy, innerR, outerR, midAngle, endAngle);
+    return firstHalf + ' ' + secondHalf;
+  }
+
   const startOuter = polarToCartesian(cx, cy, outerR, endAngle);
   const endOuter   = polarToCartesian(cx, cy, outerR, startAngle);
   const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';

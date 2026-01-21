@@ -27,13 +27,14 @@ export function generateDonutChart(normalizedLanguages, selectedTheme, width, st
   const isShifted = normalizedLanguages.length > LEGEND_SHIFT_THRESHOLD;
   const chartX = calculateDonutCenter(width, isShifted);
   const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS, isShifted);
+  const useStroke = normalizedLanguages.length > 1 ? stroke : false;
 
   const segments = createDonutSegments(
     normalizedLanguages,
     chartX,
     DONUT_GEOMETRY,
     selectedTheme.colours,
-    stroke
+    useStroke
   );
 
   const legend = createLegend(
