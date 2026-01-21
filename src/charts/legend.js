@@ -1,4 +1,4 @@
-import { LEGEND_STYLES } from '../constants/styles.js';
+import { LEGEND_STYLES } from "../constants/styles.js";
 
 export function createLegend(languages, isShifted, selectedTheme, legendStartX) {
   const numLangs = languages.length;
@@ -25,4 +25,4 @@ export function createLegend(languages, isShifted, selectedTheme, legendStartX) 
     </text>
     `;
   }).join('');
-} 
+}

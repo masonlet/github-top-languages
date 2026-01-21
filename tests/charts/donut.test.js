@@ -5,21 +5,21 @@ import { createLegend } from "../../src/charts/legend.js";
 import { LEGEND_SHIFT_THRESHOLD } from "../../src/constants/styles.js";
 
 vi.mock("../../src/charts/geometry.js", () => ({
-  createDonutSegments: vi.fn(() => '<path d="mockSegment"/>')
+  createDonutSegments: vi.fn(() => `<path d="mockSegment"/>`)
 }));
 
 vi.mock("../../src/charts/legend.js", () => ({
-  createLegend: vi.fn(() => '<rect/><text>mockLegend</text>')
+  createLegend: vi.fn(() => "<rect/><text>mockLegend</text>")
 }));
 
 describe("generateDonutChart", () => {
-  const theme = { colours: ['#f00', '#0f0'], text: '#333' };
+  const theme = { colours: ["#f00", "#0f0"], text: "#333" };
 
   it("returns segments and legend", () => {
     const langs = [{ lang: "JS", pct: 100 }];
     const result = generateDonutChart(langs, theme, 800);
-    expect(result).toHaveProperty('segments');
-    expect(result).toHaveProperty('legend');
+    expect(result).toHaveProperty("segments");
+    expect(result).toHaveProperty("legend");
     expect(createDonutSegments).toHaveBeenCalled();
     expect(createLegend).toHaveBeenCalled();
   });
@@ -49,8 +49,8 @@ describe("generateDonutChart", () => {
     generateDonutChart(langs, theme, 1000);
     const segmentCall = createDonutSegments.mock.calls[createDonutSegments.mock.calls.length - 1];
     const legendCall = createLegend.mock.calls[createLegend.mock.calls.length - 1];
-    expect(typeof segmentCall[1]).toBe('number');
-    expect(typeof legendCall[3]).toBe('number');
+    expect(typeof segmentCall[1]).toBe("number");
+    expect(typeof legendCall[3]).toBe("number");
   });
 
   it("passes theme to both segments and legend", () => {

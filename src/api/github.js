@@ -1,11 +1,11 @@
-import { REFRESH_INTERVAL } from '../constants/config.js';
+import { REFRESH_INTERVAL } from "../constants/config.js";
 
 let cachedLanguageData = null;
 let lastRefresh = 0;
 
 export async function fetchLanguageData(useTestData = false) {
   if (useTestData) {
-    const testData = await import ('../data/test-data.json', { with: { type: 'json' } });
+    const testData = await import ("../data/test-data.json", { with: { type: "json" } });
     return testData.default;
   }
 
@@ -45,7 +45,7 @@ export async function fetchLanguageData(useTestData = false) {
 
 export function processLanguageData(languageBytes, langCount){
   if(Object.keys(languageBytes).length === 0)
-    throw new Error('No language data available');
+    throw new Error("No language data available");
 
   const totalBytes = Object.values(languageBytes).reduce((a, b) => a + b, 0);
   

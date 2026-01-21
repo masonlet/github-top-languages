@@ -15,22 +15,32 @@ describe("donut geometry", () => {
     expect(polarToCartesian(100, 100, 50, 270)).toEqual({ x: 50, y: 100 }); // Left
   });
 
-  it('describeSegment: small arc path', () => {
+  it("describeSegment: small arc path", () => {
     const path = describeSegment(100, 100, 30, 50, 0, 90);
     expect(path).toMatch(/^M \d+\.?\d* \d+\.?\d*/);
     expect(path).toMatch(/A 50 50 0 0 0/); 
     expect(path).toMatch(/Z$/);
   });
 
-  it('createDonutSegments: single lang full circle', () => {
+  it("createDonutSegments: single lang full circle", () => {
     const langs = [{ pct: 100 }];
-    const paths = createDonutSegments(langs, 100, mockGeometry, ['#f00']);
+    const paths = createDonutSegments(
+      langs,
+      100,
+      mockGeometry,
+      ["#f00"]
+    );
     expect(paths).toMatch(/fill="#f00"/);
   });
 
-  it('createDonutSegments: multi-lang sums to 360°', () => {
+  it("createDonutSegments: multi-lang sums to 360°", () => {
     const langs = [{ pct: 33 }, { pct: 33 }, { pct: 34 }];
-    const paths = createDonutSegments(langs, 100, mockGeometry, ['#f00', '#0f0', '#00f']);
-    expect(paths.split('/>').length - 1).toBe(3);
+    const paths = createDonutSegments(
+      langs,
+      100,
+      mockGeometry,
+      ["#f00", "#0f0", "#00f"]
+    );
+    expect(paths.split("/>").length - 1).toBe(3);
   });
 });

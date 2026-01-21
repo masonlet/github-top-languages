@@ -1,4 +1,4 @@
-import { TITLE_STYLES } from '../constants/styles.js'
+import { TITLE_STYLES } from "../constants/styles.js"
 
 export function renderSvg(width, height, background, segments, legend, title, textColour) {
   const titleElement = title ? `

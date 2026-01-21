@@ -1,5 +1,5 @@
-import { THEMES } from '../constants/themes.js';
-import { ERROR_STYLES } from '../constants/styles.js'
+import { THEMES } from "../constants/themes.js";
+import { ERROR_STYLES } from "../constants/styles.js"
 
 export function renderError(message, width, height, selectedTheme){
   const background = selectedTheme?.bg || THEMES.default.bg; 

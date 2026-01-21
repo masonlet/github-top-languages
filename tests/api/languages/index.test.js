@@ -24,12 +24,12 @@ describe("handler", () => {
     };
 
     parseQueryParams.mockReturnValue({
-      width: 600,
-      height: 400,
-      selectedTheme: { bg: "#fff", text: "#000" },
-      langCount: 5,
       chartType: "donut",
       chartTitle: "Languages",
+      width: 600,
+      height: 400,
+      langCount: 5,
+      selectedTheme: { bg: "#fff", text: "#000" },
       useTestData: false
     });
   });

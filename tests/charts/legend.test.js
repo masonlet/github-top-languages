@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { createLegend } from "../../src/charts/legend.js";
 import { LEGEND_STYLES } from "../../src/constants/styles.js";
 
-const theme = { colours: ['#f00', '#0f0', '#00f'], text: '#333' };
+const theme = { colours: ["#f00", "#0f0", "#00f"], text: "#333" };
 
 describe("createLegend", () => {
   it("single-column layout positions correctly", () => {
@@ -11,7 +11,7 @@ describe("createLegend", () => {
       { lang: "Python", pct: 40 }
     ];
     const result = createLegend(langs, false, theme, 300);
-    expect(result).toContain('x="300"');
+    expect(result).toContain(`x="300"`);
     expect(result).toContain(`y="${LEGEND_STYLES.START_Y}"`);
     expect(result).toContain(`y="${LEGEND_STYLES.START_Y + LEGEND_STYLES.ROW_HEIGHT}"`);
   });
@@ -22,7 +22,7 @@ describe("createLegend", () => {
       pct: 12.5
     }));
     const result = createLegend(langs, true, theme, 300);
-    expect(result).toContain('x="300');
+    expect(result).toContain(`x="300`);
     expect(result).toContain(`x="${300 + LEGEND_STYLES.COLUMN_WIDTH}"`);
   });
 
@@ -48,7 +48,7 @@ describe("createLegend", () => {
   it("applies theme colours correctly", () => {
     const langs = [{ lang: "Java", pct: 100 }];
     const result = createLegend(langs, false, theme, 300);
-    expect(result).toContain('fill="#f00"');
+    expect(result).toContain(`fill="#f00"`);
     expect(result).toContain(`fill="${theme.text}"`);
   });
 });

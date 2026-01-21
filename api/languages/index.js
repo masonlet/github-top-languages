@@ -1,12 +1,12 @@
-import { parseQueryParams } from '../../src/utils/params.js';
-import { fetchLanguageData, processLanguageData } from '../../src/api/github.js';
-import { generateChartData } from '../../src/render/chart.js';
-import { renderSvg } from '../../src/render/svg.js';
-import { renderError } from '../../src/render/error.js';
+import { parseQueryParams } from "../../src/utils/params.js";
+import { fetchLanguageData, processLanguageData } from "../../src/api/github.js";
+import { generateChartData } from "../../src/render/chart.js";
+import { renderSvg } from "../../src/render/svg.js";
+import { renderError } from "../../src/render/error.js";
 
 export default async function handler(req, res) {
   const params = parseQueryParams(req.query);
-  const { width, height, selectedTheme, langCount, chartType, chartTitle, useTestData } = params;
+  const { chartType, chartTitle, width, height, langCount, selectedTheme, useTestData } = params;
 
   try {
     const rawData = await fetchLanguageData(useTestData);
@@ -15,12 +15,12 @@ export default async function handler(req, res) {
     const { segments, legend } = generateChartData(normalizedData, selectedTheme, chartType, width);
 
     const svg = renderSvg(width, height, selectedTheme.bg, segments, legend, chartTitle, selectedTheme.text);
-    res.setHeader('Content-Type', 'image/svg+xml');
-    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60');
+    res.setHeader("Content-Type", "image/svg+xml");
+    res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=3600, stale-while-revalidate=60");
     res.status(200).send(svg);
   } catch (error) {
     const errorSvg = renderError(error.message, width, height, selectedTheme);
-    res.setHeader('Content-Type', 'image/svg+xml');
+    res.setHeader("Content-Type", "image/svg+xml");
     res.status(500).send(errorSvg);
   }
 }

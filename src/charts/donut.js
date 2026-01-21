@@ -1,10 +1,10 @@
-import { createDonutSegments } from './geometry.js';
-import { DONUT_GEOMETRY } from '../constants/geometry.js';
-import { createLegend } from './legend.js';
+import { createDonutSegments } from "./geometry.js";
+import { DONUT_GEOMETRY } from "../constants/geometry.js";
+import { createLegend } from "./legend.js";
 import {
   LEGEND_SHIFT_THRESHOLD,
   LEGEND_STYLES
-} from '../constants/styles.js';
+} from "../constants/styles.js";
 
 function calculateDonutCenter(width, isShifted) {
   const legendWidth = isShifted
@@ -12,7 +12,6 @@ function calculateDonutCenter(width, isShifted) {
     : LEGEND_STYLES.WIDTH;
 
   const availableSpace = width - legendWidth - DONUT_GEOMETRY.MARGIN_RIGHT;
-
   return availableSpace / 2;
 }
 
@@ -45,4 +44,3 @@ export function generateDonutChart(normalizedLanguages, selectedTheme, width) {
 
   return { segments, legend };
 }
-
