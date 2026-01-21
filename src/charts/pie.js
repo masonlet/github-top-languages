@@ -6,8 +6,8 @@ import {
   LEGEND_STYLES
 } from "../constants/styles.js";
 
-function calculateDonutCenter(width, isShifted) {
-  const legendWidth = isShifted
+function calculatePieCenter(width, isShifted) {
+  const legendWidth = isShifted 
     ? LEGEND_STYLES.COLUMN_WIDTH * 2
     : LEGEND_STYLES.WIDTH;
 
@@ -15,23 +15,21 @@ function calculateDonutCenter(width, isShifted) {
   return availableSpace / 2;
 }
 
-function calculateLegendStartX(chartCenterX, donutRadius, isShifted) {
-  const legendWidth = isShifted
-    ? LEGEND_STYLES.COLUMN_WIDTH * 2
-    : LEGEND_STYLES.WIDTH;
-
-  return chartCenterX + donutRadius + DONUT_GEOMETRY.MARGIN_RIGHT;
+function calculateLegendStartX(chartCenterX, pieRadius) {
+  return chartCenterX + pieRadius + DONUT_GEOMETRY.MARGIN_RIGHT;
 }
 
-export function generateDonutChart(normalizedLanguages, selectedTheme, width, stroke) {
+export function generatePieChart(normalizedLanguages, selectedTheme, width, stroke = true) {
   const isShifted = normalizedLanguages.length > LEGEND_SHIFT_THRESHOLD;
-  const chartX = calculateDonutCenter(width, isShifted);
-  const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS, isShifted);
+  const chartX = calculatePieCenter(width, isShifted);
+  const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS);
+
+  const pieGeometry = { ...DONUT_GEOMETRY, INNER_RADIUS: 0 };
 
   const segments = createDonutSegments(
     normalizedLanguages,
     chartX,
-    DONUT_GEOMETRY,
+    pieGeometry,
     selectedTheme.colours,
     stroke
   );
@@ -41,7 +39,7 @@ export function generateDonutChart(normalizedLanguages, selectedTheme, width, st
     isShifted,
     selectedTheme,
     legendStartX
-  )
+  );
 
   return { segments, legend };
 }

@@ -16,7 +16,7 @@ export const LEGEND_STYLES = {
 export const ERROR_STYLES = {
   TEXT_Y: 100,
   FONT_SIZE: 18,
-  COLOUR: '#ff6b6b'
+  COLOUR: "#ff6b6b"
 }
 
 export const LEGEND_SHIFT_THRESHOLD = 8;

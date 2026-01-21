@@ -1,7 +1,7 @@
-import { DEFAULT_CONFIG, MAX_COUNT } from '../constants/config.js';
-import { THEMES } from '../constants/themes.js';
-import { VALID_TYPES } from '../constants/types.js';
-import { sanitize } from './sanitize.js';
+import { DEFAULT_CONFIG, MAX_COUNT } from "../constants/config.js";
+import { THEMES } from "../constants/themes.js";
+import { VALID_TYPES } from "../constants/types.js";
+import { sanitize } from "./sanitize.js";
 
 const parseIntSafe = (val, fallback) => {
   const parsed = Number.parseInt(val, 10);
@@ -22,16 +22,17 @@ export function parseQueryParams(query) {
   }
 
   return {
-    chartType: VALID_TYPES.includes(query.type) ? query.type : 'donut',
-    chartTitle: query.hide_title === 'true' ? '' : sanitize(query.title ?? DEFAULT_CONFIG.TITLE),
+    chartType: VALID_TYPES.includes(query.type) ? query.type : "donut",
+    chartTitle: query.hide_title === "true" ? '' : sanitize(query.title ?? DEFAULT_CONFIG.TITLE),
+    width: Math.max(parseIntSafe(query.width,  DEFAULT_CONFIG.WIDTH), DEFAULT_CONFIG.MIN_WIDTH),
+    height: parseIntSafe(query.height, DEFAULT_CONFIG.HEIGHT),
     langCount: Math.min(Math.max(count, 1), MAX_COUNT),
     selectedTheme: {
       bg: THEMES[query.bg]?.bg ?? query.bg ?? baseTheme.bg,
       text: query.text ?? baseTheme.text,
       colours: customColours
     },
-    width: Math.max(parseIntSafe(query.width,  DEFAULT_CONFIG.WIDTH), DEFAULT_CONFIG.MIN_WIDTH),
-    height: parseIntSafe(query.height, DEFAULT_CONFIG.HEIGHT),
-    useTestData: query.test === 'true'   
+    stroke: query.stroke === "true",
+    useTestData: query.test === "true"
   }
 }

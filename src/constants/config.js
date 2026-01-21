@@ -1,5 +1,5 @@
 export const DEFAULT_CONFIG = {
-  TITLE: 'Top Languages',
+  TITLE: "Top Languages",
   WIDTH: 400,
   HEIGHT: 300,
   COUNT: 8,

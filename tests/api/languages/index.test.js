@@ -24,12 +24,13 @@ describe("handler", () => {
     };
 
     parseQueryParams.mockReturnValue({
-      width: 600,
-      height: 400,
-      selectedTheme: { bg: "#fff", text: "#000" },
-      langCount: 5,
       chartType: "donut",
       chartTitle: "Languages",
+      width: 600,
+      height: 400,
+      langCount: 5,
+      selectedTheme: { bg: "#fff", text: "#000" },
+      stroke: false,
       useTestData: false
     });
   });
@@ -55,7 +56,7 @@ describe("handler", () => {
 
     expect(fetchLanguageData).toHaveBeenCalledWith(false);
     expect(processLanguageData).toHaveBeenCalledWith(rawData, 5);
-    expect(generateChartData).toHaveBeenCalledWith(normalizedData, { bg: "#fff", text: "#000" }, "donut", 600);
+    expect(generateChartData).toHaveBeenCalledWith(normalizedData, { bg: "#fff", text: "#000" }, "donut", 600, false);
     expect(renderSvg).toHaveBeenCalledWith(600, 400, "#fff", chartData.segments, chartData.legend, "Languages", "#000");
     expect(res.setHeader).toHaveBeenCalledWith("Content-Type", "image/svg+xml");
     expect(res.setHeader).toHaveBeenCalledWith("Cache-Control", "public, max-age=3600, s-maxage=3600, stale-while-revalidate=60");
