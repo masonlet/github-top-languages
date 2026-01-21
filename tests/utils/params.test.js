@@ -10,7 +10,7 @@ describe("parseQueryParams", () => {
 
     expect(params.chartType).toBe("donut");
     expect(params.chartTitle).toBe(DEFAULT_CONFIG.TITLE);
-    expect(params.langCount).toBe(DEFAULT_CONFIG.COUNT);
+    expect(params.count).toBe(DEFAULT_CONFIG.COUNT);
     
     expect(params.selectedTheme.bg).toBe(THEMES.default.bg);
     expect(params.selectedTheme.text).toBe(THEMES.default.text);
@@ -41,10 +41,10 @@ describe("parseQueryParams", () => {
     expect(params.chartTitle).toBe(`&lt;scripts&gt;alert(&quot;x&quot;)&lt;/script&gt;`);
   });
 
-  it("clamps langCount between 1 and MAX_COUNT (supports count and langCount)", () => {
-    expect(parseQueryParams({ count: "0" }).langCount).toBe(1);
-    expect(parseQueryParams({ langCount: "-5" }).langCount).toBe(1);
-    expect(parseQueryParams({ count: String(MAX_COUNT + 100) }).langCount).toBe(MAX_COUNT);
+  it("clamps count between 1 and MAX_COUNT", () => {
+    expect(parseQueryParams({ count: "0" }).count).toBe(1);
+    expect(parseQueryParams({ count: "-5" }).count).toBe(1);
+    expect(parseQueryParams({ count: String(MAX_COUNT + 100) }).count).toBe(MAX_COUNT);
   });
 
   it("applies theme by name and allows overriding text/bg", () => {
@@ -88,7 +88,7 @@ describe("parseQueryParams", () => {
 
   it("falls back to default when count/width are non-numeric", () => {
     const params = parseQueryParams({ count: "abc", width: "xyz" });
-    expect(params.langCount).toBe(DEFAULT_CONFIG.COUNT);
+    expect(params.count).toBe(DEFAULT_CONFIG.COUNT);
     expect(params.width).toBe(DEFAULT_CONFIG.WIDTH);
   })
 

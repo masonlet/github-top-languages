@@ -11,7 +11,7 @@ const parseIntSafe = (val, fallback) => {
 export function parseQueryParams(query) {
   const baseTheme = THEMES[query.theme] ?? THEMES.default;
 
-  const count = parseIntSafe(query.count ?? query.langCount, DEFAULT_CONFIG.COUNT);
+  const count = parseIntSafe(query.count, DEFAULT_CONFIG.COUNT);
 
   const customColours = [...baseTheme.colours];
   for (let i = 1; i <= MAX_COUNT; i++) {
@@ -26,7 +26,7 @@ export function parseQueryParams(query) {
     chartTitle: query.hide_title === "true" ? '' : sanitize(query.title ?? DEFAULT_CONFIG.TITLE),
     width: Math.max(parseIntSafe(query.width,  DEFAULT_CONFIG.WIDTH), DEFAULT_CONFIG.MIN_WIDTH),
     height: parseIntSafe(query.height, DEFAULT_CONFIG.HEIGHT),
-    langCount: Math.min(Math.max(count, 1), MAX_COUNT),
+    count: Math.min(Math.max(count, 1), MAX_COUNT),
     selectedTheme: {
       bg: THEMES[query.bg]?.bg ?? query.bg ?? baseTheme.bg,
       text: query.text ?? baseTheme.text,

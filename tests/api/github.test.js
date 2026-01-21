@@ -149,7 +149,7 @@ describe("processLanguageData", () => {
     expect(result[2].lang).toBe('HTML');
   });
 
-  it("limits to langCount", () => {
+  it("limits to count", () => {
     const data = { JavaScript: 5000, Python: 3000, HTML: 2000, CSS: 1000 };
     const result = processLanguageData(data, 2);
 
