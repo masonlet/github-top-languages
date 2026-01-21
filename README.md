@@ -53,6 +53,7 @@ Append these query parameters to the URL to customize the look and data of your 
 | `text` | String | Sets the chart text colour. Accepts hex (`ffffff`). | `#000000` | `?text=ffffff` |
 | `c1`-`c16` | String | Sets individual colours for languages 1-16. Accepts hex codes. | Auto-assigned | `?c1=ff0000&c2=00ff00` |
 | `test` | Boolean | Uses samples data instead of fetching from GitHub API. | `false` | `?test=true` |
+| `stroke` | Boolean | Adds an outline stroke to chart segments. | `false` | `?stroke=true` |
 
 #### Example URL
 To get 10 languages, a dark theme, and a custom title:
