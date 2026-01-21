@@ -16,22 +16,23 @@ describe("generateChartData", () => {
   const theme = "light";
   const chartType = "donut";
   const width = 400;
+  const stroke = false;
 
   it("should call donut generator when chartType is donut", () => {
-    const result = generateChartData(data, theme, chartType, width);
-    expect(generateDonutChart).toHaveBeenCalledWith(data, theme, width);
+    const result = generateChartData(data, theme, chartType, width, stroke);
+    expect(generateDonutChart).toHaveBeenCalledWith(data, theme, width, stroke);
     expect(result.data).toBe(data);
     expect(result.theme).toBe(theme);
     expect(result.width).toBe(width);
   });
 
   it("defaults to donut generator when chartType is undefined", () => {
-    generateChartData(data, theme, undefined, width);
-    expect(generateDonutChart).toHaveBeenCalledWith(data, theme, width);
+    generateChartData(data, theme, undefined, width, stroke);
+    expect(generateDonutChart).toHaveBeenCalledWith(data, theme, width, stroke);
   });
 
   it("defaults to donut generator for unrecognized chartType", () => {
-    generateChartData(data, theme, 'bigbadwolf', width);
-    expect(generateDonutChart).toHaveBeenCalledWith(data, theme, width);
+    generateChartData(data, theme, "bigbadwolf", width, stroke);
+    expect(generateDonutChart).toHaveBeenCalledWith(data, theme, width, stroke);
   });
 });

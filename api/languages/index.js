@@ -6,13 +6,13 @@ import { renderError } from "../../src/render/error.js";
 
 export default async function handler(req, res) {
   const params = parseQueryParams(req.query);
-  const { chartType, chartTitle, width, height, langCount, selectedTheme, useTestData } = params;
+  const { chartType, chartTitle, width, height, langCount, selectedTheme, stroke, useTestData } = params;
 
   try {
     const rawData = await fetchLanguageData(useTestData);
     const normalizedData = processLanguageData(rawData, langCount);
 
-    const { segments, legend } = generateChartData(normalizedData, selectedTheme, chartType, width);
+    const { segments, legend } = generateChartData(normalizedData, selectedTheme, chartType, width, stroke);
 
     const svg = renderSvg(width, height, selectedTheme.bg, segments, legend, chartTitle, selectedTheme.text);
     res.setHeader("Content-Type", "image/svg+xml");

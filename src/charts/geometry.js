@@ -24,15 +24,13 @@ export const describeSegment = (cx, cy, innerR, outerR, startAngle, endAngle) =>
   `.trim();
 };
 
-export const createDonutSegments = (languages, cx, geometry, colours) => {
-  let currentAngle = 0;
+export const createDonutSegments = (languages, cx, geometry, colours, stroke) => {
+  let currentAngle = -0.1;
 
   return languages.map((lang, i) => {
-    const isLast = i === languages.length - 1;
-    let angle = isLast ? 360 - currentAngle : (lang.pct / 100) * 360;
+        let angle = (lang.pct / 100) * 360;
 
-    const segmentAngle =  Math.min(currentAngle + angle, FULL_CIRCLE_ANGLE); 
-
+    const segmentAngle =  Math.min(currentAngle + angle + 0.1, FULL_CIRCLE_ANGLE); 
     const path = describeSegment(
       cx,
       geometry.CENTER_Y,
@@ -43,6 +41,10 @@ export const createDonutSegments = (languages, cx, geometry, colours) => {
     );
     
     currentAngle += angle;
-    return `<path d="${path}" fill="${colours[i]}"/>`;
+const fillColour = colours[i % colours.length];
+    const strokeAttr = stroke
+      ? ` stroke="#000" stroke-width="0.5" stroke-linejoin="round"`
+      : ` stroke="${fillColour}" stroke-width="0.2"`;
+    return `<path d="${path}" fill="${fillColour}"${strokeAttr} shape-rendering="geometricPrecision"/>`;
   }).join('');
 }

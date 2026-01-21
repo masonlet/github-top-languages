@@ -32,6 +32,7 @@ export function parseQueryParams(query) {
       text: query.text ?? baseTheme.text,
       colours: customColours
     },
+    stroke: query.stroke === "true",
     useTestData: query.test === "true"
   }
 }

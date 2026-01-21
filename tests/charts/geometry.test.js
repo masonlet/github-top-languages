@@ -22,13 +22,25 @@ describe("donut geometry", () => {
     expect(path).toMatch(/Z$/);
   });
 
+  it("describeSegment: segments have stroke when enabled", () => {
+    const paths = createDonutSegments(
+      [{ pct: 50 }],
+      100,
+      mockGeometry,
+      ["#f00"],
+      true
+    );
+    expect(paths).toMatch(/stroke="#000"/);
+  });
+
   it("createDonutSegments: single lang full circle", () => {
     const langs = [{ pct: 100 }];
     const paths = createDonutSegments(
       langs,
       100,
       mockGeometry,
-      ["#f00"]
+      ["#f00"],
+      false
     );
     expect(paths).toMatch(/fill="#f00"/);
   });
@@ -39,7 +51,8 @@ describe("donut geometry", () => {
       langs,
       100,
       mockGeometry,
-      ["#f00", "#0f0", "#00f"]
+      ["#f00", "#0f0", "#00f"],
+      false
     );
     expect(paths.split("/>").length - 1).toBe(3);
   });
