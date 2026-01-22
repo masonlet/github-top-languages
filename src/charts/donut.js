@@ -15,11 +15,7 @@ function calculateDonutCenter(width, isShifted) {
   return availableSpace / 2;
 }
 
-function calculateLegendStartX(chartCenterX, donutRadius, isShifted) {
-  const legendWidth = isShifted
-    ? LEGEND_STYLES.COLUMN_WIDTH * 2
-    : LEGEND_STYLES.WIDTH;
-
+function calculateLegendStartX(chartCenterX, donutRadius) {
   return chartCenterX + donutRadius + DONUT_GEOMETRY.MARGIN_RIGHT;
 }
 
