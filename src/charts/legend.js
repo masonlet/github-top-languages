@@ -38,7 +38,7 @@ export function createLegend(languages, isShifted, selectedTheme, legendStartX, 
         fill="${selectedTheme.text}" 
         font-size="${LEGEND_STYLES.FONT_SIZE}" 
         font-family="Arial"
-      ">
+      >
       ${lang.lang} ${lang.pct.toFixed(1)}%
     </text>
     `;
