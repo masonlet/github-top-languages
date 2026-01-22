@@ -19,7 +19,7 @@ function calculateLegendStartX(chartCenterX, pieRadius) {
   return chartCenterX + pieRadius + DONUT_GEOMETRY.MARGIN_RIGHT;
 }
 
-export function generatePieChart(normalizedLanguages, selectedTheme, width, stroke = true) {
+export function generatePieChart(normalizedLanguages, selectedTheme, width, stroke) {
   const isShifted = normalizedLanguages.length > LEGEND_SHIFT_THRESHOLD;
   const chartX = calculatePieCenter(width, isShifted);
   const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS);
