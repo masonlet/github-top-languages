@@ -29,8 +29,17 @@ describe("createLegend", () => {
   it("formats percentages to one decimal", () => {
     const langs = [{ lang: "Rust", pct: 33.333 }];
     const result = createLegend(langs, false, theme, 300);
+    
     expect(result).toContain("33.3%");
     expect(result).not.toContain("33.333");
+  });
+
+  it("adds stroke attributes when stroke is enabled", () => {
+    const langs = [{ lang: "C#", pct: 100 }];
+    const result = createLegend(langs, false, theme, 300, true);
+
+    expect(result).toContain(`stroke="#000"`);
+    expect(result).toContain(`stroke-width="0.5"`);
   });
 
   it("generates rect and text for each language", () => {

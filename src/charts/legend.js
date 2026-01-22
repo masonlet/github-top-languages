@@ -1,6 +1,6 @@
 import { LEGEND_STYLES } from "../constants/styles.js";
 
-export function createLegend(languages, isShifted, selectedTheme, legendStartX) {
+export function createLegend(languages, isShifted, selectedTheme, legendStartX, stroke) {
   const numLangs = languages.length;
 
   return languages.map((lang, i) => {
@@ -18,9 +18,27 @@ export function createLegend(languages, isShifted, selectedTheme, legendStartX) 
       y = LEGEND_STYLES.START_Y + row * LEGEND_STYLES.ROW_HEIGHT;
     }
 
+    const fill = selectedTheme.colours[i];
+    const strokeAttr = stroke
+      ? ` stroke="#000" stroke-width="0.5" stroke-linejoin="round"`
+      : ``;
+
     return `
-      <rect x="${x}" y="${y - LEGEND_STYLES.SQUARE_SIZE + 3}" width="${LEGEND_STYLES.SQUARE_SIZE}" height="${LEGEND_STYLES.SQUARE_SIZE}" fill="${selectedTheme.colours[i]}" rx="${LEGEND_STYLES.SQUARE_RADIUS}"/>
-      <text x="${x + LEGEND_STYLES.SQUARE_SIZE + 5}" y="${y}" fill="${selectedTheme.text}" font-size="${LEGEND_STYLES.FONT_SIZE}" font-family="Arial">
+      <rect 
+        x="${x}" 
+        y="${y - LEGEND_STYLES.SQUARE_SIZE + 3}" 
+        width="${LEGEND_STYLES.SQUARE_SIZE}" 
+        height="${LEGEND_STYLES.SQUARE_SIZE}" 
+        fill="${fill}"
+        rx="${LEGEND_STYLES.SQUARE_RADIUS}"${strokeAttr}
+      />
+      <text 
+        x="${x + LEGEND_STYLES.SQUARE_SIZE + 5}" 
+        y="${y}" 
+        fill="${selectedTheme.text}" 
+        font-size="${LEGEND_STYLES.FONT_SIZE}" 
+        font-family="Arial"
+      >
       ${lang.lang} ${lang.pct.toFixed(1)}%
     </text>
     `;
