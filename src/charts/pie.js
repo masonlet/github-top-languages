@@ -38,7 +38,8 @@ export function generatePieChart(normalizedLanguages, selectedTheme, width, stro
     normalizedLanguages,
     isShifted,
     selectedTheme,
-    legendStartX
+    legendStartX,
+    useStroke
   );
 
   return { segments, legend };

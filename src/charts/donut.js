@@ -22,7 +22,7 @@ function calculateLegendStartX(chartCenterX, donutRadius) {
 export function generateDonutChart(normalizedLanguages, selectedTheme, width, stroke) {
   const isShifted = normalizedLanguages.length > LEGEND_SHIFT_THRESHOLD;
   const chartX = calculateDonutCenter(width, isShifted);
-  const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS, isShifted);
+  const legendStartX = calculateLegendStartX(chartX, DONUT_GEOMETRY.OUTER_RADIUS);
   const useStroke = normalizedLanguages.length > 1 ? stroke : false;
 
   const segments = createDonutSegments(
@@ -37,7 +37,8 @@ export function generateDonutChart(normalizedLanguages, selectedTheme, width, st
     normalizedLanguages,
     isShifted,
     selectedTheme,
-    legendStartX
+    legendStartX,
+    useStroke
   )
 
   return { segments, legend };
