@@ -3,7 +3,7 @@ export const DEFAULT_CONFIG = {
   WIDTH: 400,
   HEIGHT: 300,
   COUNT: 8,
-  MIN_WIDTH: 350
+  MIN_WIDTH: 400
 }
 
 export const REFRESH_INTERVAL = 1000 * 60 * 60;
