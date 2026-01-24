@@ -6,5 +6,17 @@
   "CSS": 32000,
   "Java": 28000,
   "C#": 15000,
-  "Shell": 12000
+  "Shell": 12000,
+  "TypeScript": 42000,
+  "Go": 26000,
+  "Rust": 24000,
+  "PHP": 23000,
+  "C": 35000,
+  "Assembly": 18000,
+  "SQL": 40000,
+  "Lua": 11000,
+  "Objective-C": 9000,
+  "PowerShell": 13000,
+  "Bash": 12500,
+  "Kotlin": 22000
 }

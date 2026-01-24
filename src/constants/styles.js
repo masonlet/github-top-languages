@@ -10,7 +10,7 @@ export const LEGEND_STYLES = {
   SQUARE_RADIUS: 2,
   FONT_SIZE: 11,
   WIDTH: 130,
-  COLUMN_WIDTH: 100
+  COLUMN_WIDTH: 105
 }
 
 export const ERROR_STYLES = {
