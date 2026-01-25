@@ -5,7 +5,23 @@ Generate a top languages chart for your GitHub profile that you can embed in a R
 [![Tests](https://github.com/masonlet/github-top-languages/actions/workflows/tests.yml/badge.svg)](https://github.com/masonlet/github-top-languages/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-![Example Top Languages Chart](images/default8.png)
+![Example 8 Top Languages Chart](images/default8.png)
+
+<details>
+  <summary>More Examples</summary>
+
+  **16 Languages**
+  ![Example 16 Top Languages Chart](images/default16.png)
+
+  **Dark Theme**
+  ![Dark Theme](images/pie-dark.png)
+
+  **Light Theme**
+  ![Light Theme](images/pie-light.png)
+
+  **Default Theme**
+  ![Default Theme](images/pie.png)
+</details>
 
 ## Table of Contents
 - [Features](#features)
