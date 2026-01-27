@@ -13,16 +13,26 @@ export async function fetchLanguageData(useTestData = false) {
   if (cachedLanguageData && now - lastRefresh < REFRESH_INTERVAL) 
     return cachedLanguageData;
 
-  const username = process.env.GITHUB_USERNAME;
-  if(!username) throw new Error(`GITHUB_USERNAME environment variable is not set`);
+  const usernames = process.env.GITHUB_USERNAMES?.split(',').map(u => u.trim()).filter(Boolean) || [];
+  const orgs = process.env.GITHUB_ORGS?.split(',').map(o => o.trim()).filter(Boolean) || [];
 
-  const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=100`);
-  if(!reposResponse.ok) 
-    throw new Error(`GitHub API error: ${reposResponse.status} ${reposResponse.statusText}`);
+  if(usernames.length === 0 && orgs.length === 0) 
+    throw new Error(`At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set`);
 
-  const repos = await reposResponse.json();
+  const fetchPromises = [
+    ...usernames.map(user => fetch(`https://api.github.com/users/${user}/repos?per_page=100`)),
+    ...orgs.map(org => fetch(`https://api.github.com/orgs/${org}/repos?per_page=100`))
+  ];
+
+  const responses = await Promise.all(fetchPromises);
+
+  for (const response of responses) 
+    if (!response.ok) throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+
+  const repoArrays = await Promise.all(responses.map(r => r.json()));
+  const repos = repoArrays.flat();
+
   const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
-
   const filteredRepos = repos.filter(repo => !repo.fork && !ignored.includes(repo.name));
 
   const languageFetches = filteredRepos.map(repo =>

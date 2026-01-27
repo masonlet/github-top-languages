@@ -15,7 +15,7 @@ const languages = {
 
 describe("fetchLanguageData", () => {
   beforeEach(() => {
-    vi.stubEnv('GITHUB_USERNAME', 'testuser');
+    vi.stubEnv('GITHUB_USERNAMES', 'testuser');
     vi.stubEnv('IGNORED_REPOS', 'ignored-repo');
     global.fetch = vi.fn();
     vi.resetModules();
@@ -33,14 +33,14 @@ describe("fetchLanguageData", () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  it("throws error when GITHUB_USERNAME env variable not set", async () => {
+  it("throws error when GITHUB_USERNAMES env variable not set", async () => {
     vi.unstubAllEnvs();
-    await expect(fetchLanguageData()).rejects.toThrow('GITHUB_USERNAME environment variable is not set');
+    await expect(fetchLanguageData()).rejects.toThrow('At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set');
   });
 
   it("handles missing IGNORED_REPOS env variable", async () => {
     vi.unstubAllEnvs();
-    vi.stubEnv('GITHUB_USERNAME', 'testuser');
+    vi.stubEnv('GITHUB_USERNAMES', 'testuser');
 
     global.fetch
       .mockResolvedValueOnce({ ok: true, json: async () => repos })
