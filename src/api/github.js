@@ -17,7 +17,7 @@ export async function fetchLanguageData(useTestData = false) {
   const orgs = process.env.GITHUB_ORGS?.split(',').map(o => o.trim()).filter(Boolean) || [];
 
   if(usernames.length === 0 && orgs.length === 0) 
-    throw new Error(`At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set`);
+    throw new Error("At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set");
 
   const fetchPromises = [
     ...usernames.map(user => fetch(`https://api.github.com/users/${user}/repos?per_page=100`)),

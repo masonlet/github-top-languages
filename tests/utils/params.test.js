@@ -38,7 +38,7 @@ describe("parseQueryParams", () => {
 
   it("sanitizes title when provided", () => {
     const params = parseQueryParams({ title: `<scripts>alert("x")</script>` });
-    expect(params.chartTitle).toBe(`&lt;scripts&gt;alert(&quot;x&quot;)&lt;/script&gt;`);
+    expect(params.chartTitle).toBe("&lt;scripts&gt;alert(&quot;x&quot;)&lt;/script&gt;");
   });
 
   it("clamps count between 1 and MAX_COUNT", () => {

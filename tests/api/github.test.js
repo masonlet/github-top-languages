@@ -15,8 +15,8 @@ const languages = {
 
 describe("fetchLanguageData", () => {
   beforeEach(() => {
-    vi.stubEnv('GITHUB_USERNAMES', 'testuser');
-    vi.stubEnv('IGNORED_REPOS', 'ignored-repo');
+    vi.stubEnv("GITHUB_USERNAMES", "testuser");
+    vi.stubEnv("IGNORED_REPOS", "ignored-repo");
     global.fetch = vi.fn();
     vi.resetModules();
     resetCache();
@@ -35,12 +35,12 @@ describe("fetchLanguageData", () => {
 
   it("throws error when GITHUB_USERNAMES env variable not set", async () => {
     vi.unstubAllEnvs();
-    await expect(fetchLanguageData()).rejects.toThrow('At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set');
+    await expect(fetchLanguageData()).rejects.toThrow("At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set");
   });
 
   it("handles missing IGNORED_REPOS env variable", async () => {
     vi.unstubAllEnvs();
-    vi.stubEnv('GITHUB_USERNAMES', 'testuser');
+    vi.stubEnv("GITHUB_USERNAMES", "testuser");
 
     global.fetch
       .mockResolvedValueOnce({ ok: true, json: async () => repos })
@@ -64,17 +64,17 @@ describe("fetchLanguageData", () => {
     await fetchLanguageData();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.github.com/users/testuser/repos?per_page=100'
+      "https://api.github.com/users/testuser/repos?per_page=100"
     );
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.github.com/repos/user/repo1/languages'
+      "https://api.github.com/repos/user/repo1/languages"
     );
 
     expect(global.fetch).not.toHaveBeenCalledWith(
-      'https://api.github.com/repos/user/repo2/languages'
+      "https://api.github.com/repos/user/repo2/languages"
     );
     expect(global.fetch).not.toHaveBeenCalledWith(
-      'https://api.github.com/repos/user/ignored-repo/languages'
+      "https://api.github.com/repos/user/ignored-repo/languages"
     );
   });
 
@@ -97,10 +97,10 @@ describe("fetchLanguageData", () => {
     global.fetch.mockResolvedValueOnce({ 
       ok: false, 
       status: 404, 
-      statusText: 'Not Found' 
+      statusText: "Not Found" 
     });
 
-    await expect(fetchLanguageData()).rejects.toThrow('GitHub API error: 404 Not Found');
+    await expect(fetchLanguageData()).rejects.toThrow("GitHub API error: 404 Not Found");
   });
 
   it("caches results within refresh interval", async () => {
@@ -131,7 +131,7 @@ describe("fetchLanguageData", () => {
 
   it("fetches from organizations", async () => {
     vi.unstubAllEnvs();
-    vi.stubEnv('GITHUB_ORGS', 'test-org');
+    vi.stubEnv("GITHUB_ORGS", "test-org");
 
     const orgRepos = [
       { name: "org-repo", fork: false, full_name: "test-org/org-repo" }
@@ -144,7 +144,7 @@ describe("fetchLanguageData", () => {
     const result = await fetchLanguageData();
 
     expect(global.fetch).toHaveBeenCalledWith(
-      'https://api.github.com/orgs/test-org/repos?per_page=100'
+      "https://api.github.com/orgs/test-org/repos?per_page=100"
     );
     expect(result).toEqual({ TypeScript: 4000 });
   });
@@ -155,18 +155,18 @@ describe("processLanguageData", () => {
     const data = { JavaScript: 5000, Python: 3000, HTML: 2000 };
     const result = processLanguageData(data, 3);
     expect(result).toHaveLength(3);
-    expect(result[0]).toEqual({ lang: 'JavaScript', pct: 50 });
-    expect(result[1]).toEqual({ lang: 'Python', pct: 30 });
-    expect(result[2]).toEqual({ lang: 'HTML', pct: 20 });
+    expect(result[0]).toEqual({ lang: "JavaScript", pct: 50 });
+    expect(result[1]).toEqual({ lang: "Python", pct: 30 });
+    expect(result[2]).toEqual({ lang: "HTML", pct: 20 });
   });
 
   it("sorts by percentage descending", () => {
     const data = { HTML: 1000, JavaScript: 5000, Python: 3000 };
     const result = processLanguageData(data, 3);
 
-    expect(result[0].lang).toBe('JavaScript');
-    expect(result[1].lang).toBe('Python');
-    expect(result[2].lang).toBe('HTML');
+    expect(result[0].lang).toBe("JavaScript");
+    expect(result[1].lang).toBe("Python");
+    expect(result[2].lang).toBe("HTML");
   });
 
   it("limits to count", () => {
@@ -174,7 +174,7 @@ describe("processLanguageData", () => {
     const result = processLanguageData(data, 2);
 
     expect(result).toHaveLength(2);
-    expect(result.map(l => l.lang)).toEqual(['JavaScript', 'Python']);
+    expect(result.map(l => l.lang)).toEqual(["JavaScript", "Python"]);
   });
 
   it("renormalizes percentages after slicing", () => {
@@ -186,6 +186,6 @@ describe("processLanguageData", () => {
   });
 
   it("throws when no language data", () => {
-    expect(() => processLanguageData({}, 5)).toThrow('No language data available');
+    expect(() => processLanguageData({}, 5)).toThrow("No language data available");
   });
 });

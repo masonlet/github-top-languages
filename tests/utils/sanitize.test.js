@@ -11,7 +11,7 @@ describe("sanitize", () => {
   });
 
   it("escapes the criticial HTML characters", () => {
-    expect(sanitize(`<>&"'`)).toBe(`&lt;&gt;&amp;&quot;&#39;`);
+    expect(sanitize(`<>&"'`)).toBe("&lt;&gt;&amp;&quot;&#39;");
   });
 
   it("leaves safe strings unchanged", () => {
@@ -19,6 +19,6 @@ describe("sanitize", () => {
   });
 
   it("escapes mixed content correctly", () => {
-    expect(sanitize(`Hi <Mason> & "team"`)).toBe(`Hi &lt;Mason&gt; &amp; &quot;team&quot;`);
+    expect(sanitize(`Hi <Mason> & "team"`)).toBe("Hi &lt;Mason&gt; &amp; &quot;team&quot;");
   });
 });
