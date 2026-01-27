@@ -128,6 +128,26 @@ describe("fetchLanguageData", () => {
     const result = await fetchLanguageData();
     expect(result).toEqual({ Python: 500 });
   });
+
+  it("fetches from organizations", async () => {
+    vi.unstubAllEnvs();
+    vi.stubEnv('GITHUB_ORGS', 'test-org');
+
+    const orgRepos = [
+      { name: "org-repo", fork: false, full_name: "test-org/org-repo" }
+    ];
+
+    global.fetch
+      .mockResolvedValueOnce({ ok: true, json: async () => orgRepos })
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ TypeScript: 4000 }) })
+
+    const result = await fetchLanguageData();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://api.github.com/orgs/test-org/repos?per_page=100'
+    );
+    expect(result).toEqual({ TypeScript: 4000 });
+  });
 });
 
 describe("processLanguageData", () => {
