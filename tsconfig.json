@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "outDir": "./dist",
-    "allowJs": true
+    "module": "ES6",
+    "moduleResolution": "bundler",
+    "outDir": "./dist"
   },
   "include": ["./src/**/*.ts"]
 }
