@@ -2,9 +2,9 @@ import { DEFAULT_CONFIG, MAX_COUNT } from "../constants/config";
 import { THEMES } from "../constants/themes";
 import { VALID_TYPES } from "../constants/types";
 import { sanitize } from "./sanitize";
+import type { ChartType } from "../types";
 
-type QueryParams = Record<string, string | undefined>;
-type ChartType = (typeof VALID_TYPES)[number];
+export type QueryParams = Record<string, string | undefined>;
 
 const parseIntSafe = (
   val: string | undefined, 
