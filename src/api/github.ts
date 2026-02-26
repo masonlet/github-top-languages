@@ -1,9 +1,14 @@
-import { REFRESH_INTERVAL } from "../constants/config.js";
+import { REFRESH_INTERVAL } from "../constants/config";
+import { Language } from "../types";
 
-let cachedLanguageData = null;
+type LanguageBytes = Record<string, number>;
+
+let cachedLanguageData: LanguageBytes | null = null;
 let lastRefresh = 0;
 
-export async function fetchLanguageData(useTestData = false) {
+export async function fetchLanguageData(
+  useTestData = false
+): Promise<LanguageBytes> {
   if (useTestData) {
     const testData = await import ("../data/test-data.json", { with: { type: "json" } });
     return testData.default;
@@ -40,9 +45,9 @@ export async function fetchLanguageData(useTestData = false) {
       .then(r => r.ok ? r.json() : {})
   );
 
-  const langResults = await Promise.all(languageFetches);
+  const langResults: LanguageBytes[] = await Promise.all(languageFetches);
 
-  cachedLanguageData = langResults.reduce((acc, languages) => {
+  cachedLanguageData = langResults.reduce<LanguageBytes>((acc, languages) => {
     for (const [lang, bytes] of Object.entries(languages)) {
       acc[lang] = (acc[lang] || 0) + bytes;
     }
@@ -53,7 +58,7 @@ export async function fetchLanguageData(useTestData = false) {
   return cachedLanguageData;
 }
 
-export function processLanguageData(languageBytes, count){
+export function processLanguageData(languageBytes: LanguageBytes, count: number): Language[] {
   if(Object.keys(languageBytes).length === 0)
     throw new Error("No language data available");
 
@@ -72,7 +77,7 @@ export function processLanguageData(languageBytes, count){
   }));
 }
 
-export function resetCache() {
+export function resetCache(): void {
   cachedLanguageData = null;
   lastRefresh = 0;
 }
