@@ -1,6 +1,6 @@
 import { THEMES } from "../constants/themes";
 import { ERROR_STYLES } from "../constants/styles"
-import { Theme } from "../types";
+import type { Theme } from "../types";
 
 export function renderError(
   message: string,

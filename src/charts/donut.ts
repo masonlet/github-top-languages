@@ -2,7 +2,7 @@ import { createDonutSegments } from "./geometry";
 import { DONUT_GEOMETRY } from "../constants/geometry";
 import { createLegend } from "./legend";
 import { LEGEND_SHIFT_THRESHOLD, LEGEND_STYLES } from "../constants/styles";
-import { Language, Theme, ChartResult } from "../types";
+import type { Language, Theme, ChartResult } from "../types";
 
 
 

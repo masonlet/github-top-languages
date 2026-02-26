@@ -1,5 +1,5 @@
 import { REFRESH_INTERVAL } from "../constants/config";
-import { Language } from "../types";
+import type { Language } from "../types";
 
 type LanguageBytes = Record<string, number>;
 
@@ -18,8 +18,8 @@ export async function fetchLanguageData(
   if (cachedLanguageData && now - lastRefresh < REFRESH_INTERVAL) 
     return cachedLanguageData;
 
-  const usernames = process.env.GITHUB_USERNAMES?.split(',').map(u => u.trim()).filter(Boolean) || [];
-  const orgs = process.env.GITHUB_ORGS?.split(',').map(o => o.trim()).filter(Boolean) || [];
+  const usernames = process.env["GITHUB_USERNAMES"]?.split(',').map(u => u.trim()).filter(Boolean) || [];
+  const orgs = process.env["GITHUB_ORGS"]?.split(',').map(o => o.trim()).filter(Boolean) || [];
 
   if(usernames.length === 0 && orgs.length === 0) 
     throw new Error("At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set");
@@ -37,7 +37,7 @@ export async function fetchLanguageData(
   const repoArrays = await Promise.all(responses.map(r => r.json()));
   const repos = repoArrays.flat();
 
-  const ignored = process.env.IGNORED_REPOS?.split(',').map(name => name.trim()) || [];
+  const ignored = process.env["IGNORED_REPOS"]?.split(',').map(name => name.trim()) || [];
   const filteredRepos = repos.filter(repo => !repo.fork && !ignored.includes(repo.name));
 
   const languageFetches = filteredRepos.map(repo =>

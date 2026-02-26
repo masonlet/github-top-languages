@@ -1,6 +1,6 @@
 import { generateDonutChart } from "../charts/donut";
 import { generatePieChart } from "../charts/pie";
-import { Language, Theme, ChartType, ChartResult } from "../types";
+import type { Language, Theme, ChartType, ChartResult } from "../types";
 
 const CHART_GENERATORS: Record<ChartType, (
   data: Language[],
