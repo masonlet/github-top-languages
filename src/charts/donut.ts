@@ -1,10 +1,8 @@
-import { createDonutSegments } from "./geometry";
-import { DONUT_GEOMETRY } from "../constants/geometry";
-import { createLegend } from "./legend";
-import { LEGEND_SHIFT_THRESHOLD, LEGEND_STYLES } from "../constants/styles";
-import type { Language, Theme, ChartResult } from "../types";
-
-
+import { createDonutSegments } from "./geometry.js";
+import { DONUT_GEOMETRY } from "../constants/geometry.js";
+import { createLegend } from "./legend.js";
+import { LEGEND_SHIFT_THRESHOLD, LEGEND_STYLES } from "../constants/styles.js";
+import type { Language, Theme, ChartResult } from "../types.js";
 
 function calculateDonutCenter(
   width: number,

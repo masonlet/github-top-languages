@@ -1,8 +1,8 @@
-import { DEFAULT_CONFIG, MAX_COUNT } from "../constants/config";
-import { THEMES } from "../constants/themes";
-import { VALID_TYPES } from "../constants/types";
-import { sanitize } from "./sanitize";
-import type { ChartType } from "../types";
+import { DEFAULT_CONFIG, MAX_COUNT } from "../constants/config.js";
+import { THEMES } from "../constants/themes.js";
+import { VALID_TYPES } from "../constants/types.js";
+import { sanitize } from "./sanitize.js";
+import type { ChartType } from "../types.js";
 
 export type QueryParams = Record<string, string | undefined>;
 

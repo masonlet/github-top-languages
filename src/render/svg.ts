@@ -1,4 +1,4 @@
-import { TITLE_STYLES } from "../constants/styles"
+import { TITLE_STYLES } from "../constants/styles.js"
 
 export function renderSvg(
   width: number,

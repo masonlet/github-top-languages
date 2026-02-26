@@ -1,5 +1,5 @@
-import { LEGEND_STYLES } from "../constants/styles";
-import type { Language, Theme } from "../types";
+import { LEGEND_STYLES } from "../constants/styles.js";
+import type { Language, Theme } from "../types.js";
 
 export function createLegend(
   languages: Language[],

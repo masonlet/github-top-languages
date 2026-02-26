@@ -1,5 +1,5 @@
-import { REFRESH_INTERVAL } from "../constants/config";
-import type { Language } from "../types";
+import { REFRESH_INTERVAL } from "../constants/config.js";
+import type { Language } from "../types.js";
 
 type LanguageBytes = Record<string, number>;
 
