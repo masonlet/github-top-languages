@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
-import { generatePieChart } from "../../src/charts/pie.js";
-import { createDonutSegments } from "../../src/charts/geometry.js";
-import { createLegend } from "../../src/charts/legend.js";
-import { LEGEND_SHIFT_THRESHOLD } from "../../src/constants/styles.js";
+import { generatePieChart         } from "../../src/charts/pie.js";
+import { createDonutSegments      } from "../../src/charts/geometry.js";
+import { LEGEND_SHIFT_THRESHOLD   } from "../../src/constants/styles.js";
+import { createLegend             } from "../../src/charts/legend.js";
 
 vi.mock("../../src/charts/geometry.js", () => ({
   createDonutSegments: vi.fn(() => `<path d="mockSegment"/>`)

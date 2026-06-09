@@ -1,8 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { parseQueryParams } from "../../src/utils/params.js"
-
+import { describe, it, expect      } from "vitest";
 import { DEFAULT_CONFIG, MAX_COUNT } from "../../src/constants/config.js";
-import { THEMES } from "../../src/constants/themes.js";
+import { THEMES                    } from "../../src/constants/themes.js";
+import { parseQueryParams          } from "../../src/utils/params.js"
 
 describe("parseQueryParams", () => {
   it("uses defaults when query is empty", () => {

@@ -1,23 +1,27 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach    } from "vitest";
 import { fetchLanguageData, processLanguageData, resetCache } from "../../src/api/github.js";
 
 const repos = [
-  { name: "repo1", fork: false, full_name: "user/repo1" },
-  { name: "repo2", fork: true, full_name: "user/repo2" },
+  { name: "repo1",        fork: false, full_name: "user/repo1"        },
+  { name: "repo2",        fork: true,  full_name: "user/repo2"        },
   { name: "ignored-repo", fork: false, full_name: "user/ignored-repo" }
 ];
 
 const languages = {
   JavaScript: 5000,
-  Python: 3000,
-  HTML: 2000
+  Python:     3000,
+  HTML:       2000
 };
 
 const mockFetch = () => vi.mocked(global.fetch);
-const mockResponse = (data: unknown) => 
-  ({ ok: true, json: async () => data }) as unknown as Response;
-const mockErrorResponse = (status: number, statusText = "") =>
-  ({ ok: false, status, statusText }) as unknown as Response;
+
+const mockResponse = (data: unknown) => (
+  { ok: true, json: async () => data }
+) as unknown as Response;
+
+const mockErrorResponse = (status: number, statusText = "") => (
+  { ok: false, status, statusText }
+) as unknown as Response;
 
 describe("fetchLanguageData", () => {
   beforeEach(() => {

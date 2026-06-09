@@ -1,11 +1,11 @@
-import { THEMES } from "../constants/themes.js";
+import type { Theme   } from "../types.js";
+import { THEMES       } from "../constants/themes.js";
 import { ERROR_STYLES } from "../constants/styles.js"
-import type { Theme } from "../types.js";
 
 export function renderError(
-  message: string,
-  width: number,
-  height: number,
+  message:        string,
+  width:          number,
+  height:         number,
   selectedTheme?: Theme
 ): string {
   const background = selectedTheme?.bg || THEMES.default.bg; 

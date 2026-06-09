@@ -1,20 +1,20 @@
-import { describe, it, expect, vi } from "vitest";
-import { generateChartData } from "../../src/render/chart.js";
-import { generateDonutChart } from "../../src/charts/donut.js";
-import { THEMES } from "../../src/constants/themes.js";
+import { describe, it, expect, vi                     } from "vitest";
 import type { ChartType, ChartResult, Language, Theme } from "../../src/types.js";
+import { generateChartData                            } from "../../src/render/chart.js";
+import { generateDonutChart                           } from "../../src/charts/donut.js";
+import { THEMES                                       } from "../../src/constants/themes.js";
 
 type MockChartResult = ChartResult & {
   mockData: boolean;
-  data: Language[];
-  theme: Theme;
-  width: number;
+  data:     Language[];
+  theme:    Theme;
+  width:    number;
 }
 
 vi.mock("../../src/charts/donut.js", () => ({
   generateDonutChart: vi.fn((data, theme, width, _stroke) => ({
     segments: "",
-    legend: "",
+    legend:   "",
     mockData: true,
     data,
     theme,
@@ -23,11 +23,11 @@ vi.mock("../../src/charts/donut.js", () => ({
 }));
 
 describe("generateChartData", () => {
-  const data = [{ lang: "JavaScript", pct: 60 }];
-  const theme = THEMES.default;
+  const data      = [{ lang: "JavaScript", pct: 60 }];
+  const theme     = THEMES.default;
   const chartType = "donut";
-  const width = 400;
-  const stroke = false;
+  const width     = 400;
+  const stroke    = false;
 
   it("should call donut generator when chartType is donut", () => {
     const result = generateChartData(data, theme, chartType, width, stroke) as MockChartResult;

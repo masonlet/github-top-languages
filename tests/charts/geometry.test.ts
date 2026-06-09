@@ -1,19 +1,15 @@
-import { describe, it, expect } from "vitest";
-import {
-  polarToCartesian,
-  describeSegment,
-  createDonutSegments
-} from "../../src/charts/geometry.js";
-import type { Language } from "../../src/types.js";
+import { describe, it, expect                                   } from "vitest";
+import type { Language                                          } from "../../src/types.js";
+import { polarToCartesian, describeSegment, createDonutSegments } from "../../src/charts/geometry.js";
 
 const mockGeometry = { CENTER_Y: 100, INNER_RADIUS: 30, OUTER_RADIUS: 50 };
 
 describe("donut geometry", () => {
   it("polarToCartesian: quadrants correct", () => {
-    expect(polarToCartesian(100, 100, 50, 0)).toEqual({ x: 100, y: 50 }); // Top
-    expect(polarToCartesian(100, 100, 50, 90)).toEqual({ x: 150, y: 100 }); // Right
+    expect(polarToCartesian(100, 100, 50, 0  )).toEqual({ x: 100, y: 50  }); // Top
+    expect(polarToCartesian(100, 100, 50, 90 )).toEqual({ x: 150, y: 100 }); // Right
     expect(polarToCartesian(100, 100, 50, 180)).toEqual({ x: 100, y: 150 }); // Bottom
-    expect(polarToCartesian(100, 100, 50, 270)).toEqual({ x: 50, y: 100 }); // Left
+    expect(polarToCartesian(100, 100, 50, 270)).toEqual({ x: 50,  y: 100 }); // Left
   });
 
   it("describeSegment: small arc path", () => {

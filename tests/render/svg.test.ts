@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { renderSvg } from "../../src/render/svg.js";
+import { renderSvg            } from "../../src/render/svg.js";
 
 describe("renderSvg", () => {
   const segments = `<circle cx="200" r="100" fill="red"/>`;
