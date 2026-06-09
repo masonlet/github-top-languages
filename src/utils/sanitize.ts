@@ -8,7 +8,7 @@ const ESCAPE_MAP = {
 
 export const sanitize = (str: unknown): string => {
   if (typeof str !== "string") return '';
-  return str.replace(/[<>&"']/g, (m: string): string => 
+  return str.replace(/[<>&"']/g, (m: string): string =>
     ESCAPE_MAP[m as keyof typeof ESCAPE_MAP]
   );
 };

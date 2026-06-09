@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { createLegend } from "../../src/charts/legend.js";
-import { LEGEND_STYLES } from "../../src/constants/styles.js";
-import type { Theme } from "../../src/types.js";
+import type { Theme           } from "../../src/types.js";
+import { LEGEND_STYLES        } from "../../src/constants/styles.js";
+import { createLegend         } from "../../src/charts/legend.js";
 
 const theme: Theme = { colours: ["#f00", "#0f0", "#00f"], text: "#333", bg: "#fff" };
 

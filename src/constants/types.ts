@@ -1,4 +1,4 @@
 export const VALID_TYPES = [
-  "donut", 
+  "donut",
   "pie"
 ] as const;

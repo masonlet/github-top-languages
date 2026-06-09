@@ -1,6 +1,6 @@
 export const THEMES = {
   default: {
-    bg: "#0d1117",
+    bg:   "#0d1117",
     text: "#ffffff",
     colours: [
       "#A8D5Ba",
@@ -22,7 +22,7 @@ export const THEMES = {
     ]
   },
   light: {
-    bg: "#ffffff",
+    bg:   "#ffffff",
     text: "#2f2f2f",
     colours: [
       "#2ecc71",
@@ -44,7 +44,7 @@ export const THEMES = {
     ]
   },
   dark: {
-    bg: "#1a1a1a",
+    bg:   "#1a1a1a",
     text: "#ccd6f6",
     colours: [
       "#ff6b6b", 

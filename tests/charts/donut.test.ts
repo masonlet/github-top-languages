@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
-import { generateDonutChart } from "../../src/charts/donut.js";
-import { createDonutSegments } from "../../src/charts/geometry.js";
-import { createLegend } from "../../src/charts/legend.js";
-import { LEGEND_SHIFT_THRESHOLD } from "../../src/constants/styles.js";
-import type { Theme } from "../../src/types.js";
+import type { Theme               } from "../../src/types.js";
+import { LEGEND_SHIFT_THRESHOLD   } from "../../src/constants/styles.js";
+import { generateDonutChart       } from "../../src/charts/donut.js";
+import { createDonutSegments      } from "../../src/charts/geometry.js";
+import { createLegend             } from "../../src/charts/legend.js";
 
 vi.mock("../../src/charts/geometry.js", () => ({
   createDonutSegments: vi.fn(() => `<path d="mockSegment"/>`)
@@ -20,7 +20,7 @@ describe("generateDonutChart", () => {
   const theme: Theme = { colours: ["#f00", "#0f0"], text: "#333", bg: "#fff" };
 
   it("returns segments and legend", () => {
-    const langs = [{ lang: "JS", pct: 100 }];
+    const langs  = [{ lang: "JS", pct: 100 }];
     const result = generateDonutChart(langs, theme, 800, false);
     expect(result).toHaveProperty("segments");
     expect(result).toHaveProperty("legend");

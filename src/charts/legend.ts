@@ -1,12 +1,12 @@
-import { LEGEND_STYLES } from "../constants/styles.js";
+import { LEGEND_STYLES        } from "../constants/styles.js";
 import type { Language, Theme } from "../types.js";
 
 export function createLegend(
-  languages: Language[],
-  isShifted: boolean,
+  languages:     Language[],
+  isShifted:     boolean,
   selectedTheme: Theme,
-  legendStartX: number,
-  stroke: boolean
+  legendStartX:  number,
+  stroke:        boolean
 ): string {
   const numLangs = languages.length;
 
@@ -18,8 +18,8 @@ export function createLegend(
       y = LEGEND_STYLES.START_Y + i * LEGEND_STYLES.ROW_HEIGHT;
     } else {
       const half = Math.ceil(numLangs / 2);
-      const col = Math.floor(i / half);
-      const row = i % half;
+      const col  = Math.floor(i / half);
+      const row  = i % half;
 
       x = legendStartX + col * LEGEND_STYLES.COLUMN_WIDTH;
       y = LEGEND_STYLES.START_Y + row * LEGEND_STYLES.ROW_HEIGHT;

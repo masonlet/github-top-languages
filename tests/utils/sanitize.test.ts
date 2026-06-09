@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { sanitize } from "../../src/utils/sanitize.js";
+import { sanitize             } from "../../src/utils/sanitize.js";
 
 describe("sanitize", () => {
   it("returns empty string for non-strings", () => {

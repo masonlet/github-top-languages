@@ -1,12 +1,12 @@
 import { TITLE_STYLES } from "../constants/styles.js"
 
 export function renderSvg(
-  width: number,
-  height: number,
+  width:      number,
+  height:     number,
   background: string,
-  segments: string,
-  legend: string,
-  title: string | null,
+  segments:   string,
+  legend:     string,
+  title:      string | null,
   textColour: string
 ): string {
   const titleElement = title ? `

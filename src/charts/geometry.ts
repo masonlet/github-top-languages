@@ -1,10 +1,10 @@
-import { FULL_CIRCLE_ANGLE } from "../constants/geometry.js";
 import type { Point, Language, Geometry } from "../types.js"
+import { FULL_CIRCLE_ANGLE              } from "../constants/geometry.js";
 
 export const polarToCartesian = (
-  cx: number,
-  cy: number,
-  r: number,
+  cx:       number,
+  cy:       number,
+  r:        number,
   angleDeg: number
 ): Point => {
   const angleRad = (angleDeg - 90) * Math.PI / 180;
@@ -15,12 +15,12 @@ export const polarToCartesian = (
 };
 
 export const describeSegment = (
-  cx: number,
-  cy: number,
-  innerR: number,
-  outerR: number,
+  cx:         number,
+  cy:         number,
+  innerR:     number,
+  outerR:     number,
   startAngle: number,
-  endAngle: number
+  endAngle:   number
 ): string => {
   const angleDiff = endAngle - startAngle
 
@@ -58,10 +58,10 @@ export const describeSegment = (
 
 export const createDonutSegments = (
   languages: Language[],
-  cx: number,
-  geometry: Geometry,
-  colours: string[],
-  stroke: boolean
+  cx:        number,
+  geometry:  Geometry,
+  colours:   string[],
+  stroke:    boolean
 ): string => {
   let currentAngle = -0.1;
 
