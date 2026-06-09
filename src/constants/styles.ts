@@ -20,3 +20,5 @@ export const ERROR_STYLES = {
 } as const;
 
 export const LEGEND_SHIFT_THRESHOLD = 8;
+
+export const CHART_MARGIN_RIGHT = 20;

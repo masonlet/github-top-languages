@@ -1,12 +1,12 @@
-import { LEGEND_STYLES } from "../constants/styles.js";
+import { LEGEND_STYLES        } from "../constants/styles.js";
 import type { Language, Theme } from "../types.js";
 
 export function createLegend(
-  languages: Language[],
-  isShifted: boolean,
+  languages:     Language[],
+  isShifted:     boolean,
   selectedTheme: Theme,
-  legendStartX: number,
-  stroke: boolean
+  legendStartX:  number,
+  stroke:        boolean
 ): string {
   const numLangs = languages.length;
 

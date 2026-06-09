@@ -6,9 +6,9 @@ import { createLegend                                               } from "./le
 
 export function generateDonutChart(
   normalizedLanguages: Language[],
-  selectedTheme: Theme,
-  width: number,
-  stroke: boolean
+  selectedTheme:       Theme,
+  width:               number,
+  stroke:              boolean
 ): ChartResult {
   const { isShifted, useStroke } = resolveLayout(normalizedLanguages.length, stroke);
 
