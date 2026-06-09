@@ -6,6 +6,32 @@ type LanguageBytes = Record<string, number>;
 let cachedLanguageData: LanguageBytes | null = null;
 let lastRefresh = 0;
 
+function parseNextLink(linkHeader: string | null): string | null {
+  if (!linkHeader) return null;
+  const match = linkHeader.match(/<([^>]+)>;\s*rel="next"/);
+  return match?.[1] ?? null;
+}
+
+type Repo = {
+  name:      string;
+  fork:      boolean;
+  full_name: string;
+};
+
+async function fetchAllRepos(url: string): Promise<Repo[]> {
+  const repos: Repo[] = [];
+  let nextUrl: string | null = url;
+
+  while (nextUrl) {
+    const response = await fetch(nextUrl);
+    if (!response.ok) throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+    repos.push(...await response.json() as Repo[]);
+    nextUrl = parseNextLink(response.headers.get("Link"));
+  }
+
+  return repos;
+}
+
 export async function fetchLanguageData(useTestData = false): Promise<LanguageBytes> {
   if (useTestData) {
     const testData = await import ("../data/test-data.json", { with: { type: "json" } });
@@ -23,19 +49,11 @@ export async function fetchLanguageData(useTestData = false): Promise<LanguageBy
     "At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set"
   );
 
-  const fetchPromises = [
-    ...usernames.map(user => fetch(`https://api.github.com/users/${user}/repos?per_page=100`)),
-    ...orgs.map(     org  => fetch(`https://api.github.com/orgs/${org}/repos?per_page=100`  ))
-  ];
-
-  const responses = await Promise.all(fetchPromises);
-
-  for (const response of responses) if (!response.ok) throw new Error(
-    `GitHub API error: ${response.status} ${response.statusText}`
-  );
-
-  const repoArrays = await Promise.all(responses.map(r => r.json()));
-  const repos      = repoArrays.flat();
+  const repoArrays = await Promise.all([
+    ...usernames.map(user => fetchAllRepos(`https://api.github.com/users/${user}/repos?per_page=100`)),
+    ...orgs.map(     org  => fetchAllRepos(`https://api.github.com/orgs/${org}/repos?per_page=100`  ))
+  ]);
+  const repos = repoArrays.flat();
 
   const ignored       = process.env["IGNORED_REPOS"]?.split(',').map(name => name.trim()) || [];
   const filteredRepos = repos.filter(repo => !repo.fork && !ignored.includes(repo.name));
