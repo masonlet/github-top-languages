@@ -153,6 +153,39 @@ describe("fetchLanguageData", () => {
     );
     expect(result).toEqual({ TypeScript: 4000 });
   });
+
+  it("follows Link header pagination across multiple pages", async () => {
+    const page2Url = "https://api.github.com/users/testuser/repos?per_page=100&page=2";
+
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse(
+        [{ name: "repo1", fork: false, full_name: "user/repo1" }],
+        `<${page2Url}>; rel="next"`
+      ))
+      .mockResolvedValueOnce(mockResponse(
+        [{ name: "repo2", fork: false, full_name: "user/repo2" }]
+      ))
+      .mockResolvedValueOnce(mockResponse({ JavaScript: 1000 }))
+      .mockResolvedValueOnce(mockResponse({ Python:     500  }));
+
+    const result = await fetchLanguageData();
+    expect(global.fetch).toHaveBeenCalledWith(page2Url);
+    expect(global.fetch).toHaveBeenCalledTimes(4);
+    expect(result).toEqual({ JavaScript: 1000, Python: 500 });
+  });
+
+  it("stops when Link header has no rel=next", async () => {
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse(
+        [{ name: "repo1", fork: false, full_name: "user/repo1" }],
+        `<https://api.github.com/users/testuser/repos?per_page=100>; rel="last"`
+      ))
+      .mockResolvedValueOnce(mockResponse({ Go: 300 }));
+
+    const result = await fetchLanguageData();
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(result).toEqual({ Go: 300 });
+  });
 });
 
 describe("processLanguageData", () => {
