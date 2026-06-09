@@ -10,11 +10,15 @@ export function renderError(
   selectedTheme?: Theme
 ): string {
   const background = selectedTheme?.bg || THEMES.default.bg;
+  const maxLen = 40;
+  const truncated = message.length > maxLen
+    ? sanitize(message.slice(0, maxLen)) + "..."
+    : sanitize(message);
   return `
     <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
       <rect width="${width}" height="${height}" fill="${background}" rx="10"/>
       <text x="${width/2}" y="${ERROR_STYLES.TEXT_Y}" text-anchor="middle" fill="${ERROR_STYLES.COLOUR}" font-family="Arial" font-size="${ERROR_STYLES.FONT_SIZE}">
-        Error: ${sanitize(message)}
+        Error: ${truncated}
       </text>
     </svg>
   `.trim();

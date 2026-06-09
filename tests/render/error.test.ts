@@ -20,4 +20,11 @@ describe("renderError", () => {
     const result = renderError("Error", 400, 300);
     expect(result).toContain(`fill="${THEMES.default.bg}"`);
   });
+
+  it("truncates long error messages", () => {
+    const long = "A".repeat(50);
+    const result = renderError(long, 400, 300);
+    expect(result).toContain("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...");
+    expect(result).not.toContain("A".repeat(50));
+  });
 });
