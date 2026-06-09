@@ -71,6 +71,7 @@ Append these query parameters to the URL to customize the look and data of your 
 | `height`     | Number  | Sets the height of the SVG in pixels.                           | `300`         | `?height=350`          |
 | `stroke`     | Boolean | Adds an outline stroke to chart segments.                       | `false`       | `?stroke=true`         |
 | `test`       | Boolean | Uses samples data instead of fetching from GitHub API.          | `false`       | `?test=true`           |
+| `error`      | String  | Forces an error SVG with the given message. For testing only.   | —             | `?error=test`          |
 
 #### Example URL
 To get 10 languages, a dark theme, and a custom title:
@@ -109,6 +110,15 @@ vercel dev
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/masonlet/github-top-languages&env=GITHUB_USERNAMES,IGNORED_REPOS&envDescription[GITHUB_USERNAMES]=Comma-separated%20GitHub%20usernames&envDescription[IGNORED_REPOS]=Optional%20comma-separated%20repos%20to%20exclude)
 
 > The default endpoint is /api/languages
+
+## Error Responses
+
+All errors return HTTP 200 with an error SVG so they render in GitHub README embeds.
+
+Common error messages:
+- `GitHub API error: {status} {statusText}` — GitHub API request failed
+- `No language data available` — no public repositories found
+- `At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set` — missing environment configuration
 
 ## License
 MIT License - see [LICENSE](./LICENSE) for details.
