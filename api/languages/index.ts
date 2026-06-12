@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse     } from "@vercel/node";
-import { parseQueryParams, type QueryParams     } from "github-top-languages-lib/utils/params.js";
-import { generateChartData                      } from "github-top-languages-lib/render/chart.js";
-import { renderSvg                              } from "github-top-languages-lib/render/svg.js";
-import { renderError                            } from "github-top-languages-lib/render/error.js";
+import { parseQueryParams, type QueryParams     } from "@gh-top-languages/lib/utils/params.js";
+import { generateChartData                      } from "@gh-top-languages/lib/render/chart.js";
+import { renderSvg                              } from "@gh-top-languages/lib/render/svg.js";
+import { renderError                            } from "@gh-top-languages/lib/render/error.js";
 import { fetchLanguageData, processLanguageData } from "../../src/services/github.js";
 
 export default async function handler(

@@ -1,17 +1,17 @@
 import { describe, it, expect, vi, beforeEach   } from "vitest";
 import type { VercelRequest, VercelResponse     } from "@vercel/node";
-import type { ChartResult                       } from "github-top-languages-lib/types.js";
-import { parseQueryParams                       } from "github-top-languages-lib/utils/params.js";
-import { generateChartData                      } from "github-top-languages-lib/render/chart.js";
-import { renderSvg                              } from "github-top-languages-lib/render/svg.js";
-import { renderError                            } from "github-top-languages-lib/render/error.js";
+import type { ChartResult                       } from "@gh-top-languages/lib/types.js";
+import { parseQueryParams                       } from "@gh-top-languages/lib/utils/params.js";
+import { generateChartData                      } from "@gh-top-languages/lib/render/chart.js";
+import { renderSvg                              } from "@gh-top-languages/lib/render/svg.js";
+import { renderError                            } from "@gh-top-languages/lib/render/error.js";
 import   handler                                  from "../../../api/languages/index.js";
 import { fetchLanguageData, processLanguageData } from "../../../src/services/github.js";
 
-vi.mock("github-top-languages-lib/utils/params.js");
-vi.mock("github-top-languages-lib/render/chart.js");
-vi.mock("github-top-languages-lib/render/svg.js");
-vi.mock("github-top-languages-lib/render/error.js");
+vi.mock("@gh-top-languages/lib/utils/params.js");
+vi.mock("@gh-top-languages/lib/render/chart.js");
+vi.mock("@gh-top-languages/lib/render/svg.js");
+vi.mock("@gh-top-languages/lib/render/error.js");
 vi.mock("../../../src/services/github.js");
 
 describe("handler", () => {
