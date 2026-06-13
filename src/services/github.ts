@@ -24,6 +24,7 @@ function parseSources(env: string | undefined): Source[] {
   } catch (e) {
     console.error("Failed to parse env variable:", e);
   }
+  if (env.trimStart().startsWith('[')) return [];
   return env.split(',').map(s => ({ name: s.trim().replace(/^["']|["']$/g, "") })).filter(s => s.name);
 }
 
