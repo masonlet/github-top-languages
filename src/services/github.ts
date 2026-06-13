@@ -13,13 +13,16 @@ function parseSources(env: string | undefined): Source[] {
   try {
     const parsed = JSON.parse(env);
     if (Array.isArray(parsed)) {
-      return parsed.map(entry =>
-        typeof entry === "string" ? { name: entry } : entry
-      );
+      return parsed.map(entry => {
+        if (typeof entry === "string") return { name: entry };
+        if (entry && typeof entry === "object" && "name" in entry) return {
+          name: String(entry.name), ...(entry.token && {token: String(entry.token) })
+        };
+        return null;
+      }).filter((s): s is Source => !!s && !!s.name);
     }
-
-  } catch {
-
+  } catch (e) {
+    console.error("Failed to parse env variable:", e);
   }
   return env.split(',').map(s => ({ name: s.trim().replace(/^["']|["']$/g, "") })).filter(s => s.name);
 }
