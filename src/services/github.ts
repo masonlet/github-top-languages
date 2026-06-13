@@ -86,19 +86,22 @@ export async function fetchLanguageData(useTestData = false): Promise<LanguageBy
     "At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set"
   );
 
+  let hadFetchFailure = false;
   const repoGroups = await Promise.all([
     ...usernames.map(u =>
-      fetchAllRepos(`https://api.github.com/users/${u.name}/repos?per_page=100`, u.token)
+      fetchAllRepos(`https://api.github.com/users/${encodeURIComponent(u.name)}/repos?per_page=100`, u.token)
         .then(repos => ({ token: u.token, repos }))
         .catch(() => {
+          hadFetchFailure = true;
           console.error(`Skipping user "${u.name}": failed to fetch repositories.`);
           return { token: u.token, repos: [] as Repo[] };
         })
     ),
     ...orgs.map(o =>
-      fetchAllRepos(`https://api.github.com/orgs/${o.name}/repos?per_page=100`, o.token)
+      fetchAllRepos(`https://api.github.com/orgs/${encodeURIComponent(o.name)}/repos?per_page=100`, o.token)
         .then(repos => ({ token: o.token, repos }))
         .catch(() => {
+          hadFetchFailure = true;
           console.error(`Skipping org "${o.name}": failed to fetch repositories.`);
           return { token: o.token, repos: [] as Repo[] };
         })
@@ -109,9 +112,9 @@ export async function fetchLanguageData(useTestData = false): Promise<LanguageBy
 
   const languageFetches = repoGroups.flatMap(({ token, repos }) =>
     repos.filter(repo => !repo.fork && !ignored.includes(repo.name)).map(repo =>
-      fetch(`https://api.github.com/repos/${repo.full_name}/languages`, makeOptions(token))
+      fetch(`https://api.github.com/repos/${repo.full_name.split('/').map(encodeURIComponent).join('/')}/languages`, makeOptions(token))
         .then(r => r.ok ? (r.json() as Promise<LanguageBytes>) : ({} as LanguageBytes))
-        .catch(() => ({} as LanguageBytes))
+        .catch(() => { hadFetchFailure = true; return {} as LanguageBytes; })
     )
   );
 
@@ -124,7 +127,7 @@ export async function fetchLanguageData(useTestData = false): Promise<LanguageBy
     return acc;
   }, {});
 
-  if (Object.keys(result).length === 0 && cachedLanguageData !== null) {
+  if (Object.keys(result).length === 0 && hadFetchFailure && cachedLanguageData !== null) {
     lastRefresh = now - REFRESH_INTERVAL + (5 * 60 * 1000);
     return cachedLanguageData;
   }

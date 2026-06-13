@@ -101,8 +101,8 @@ npm install
 
 ### Configuration
 Copy `.env.example` to `.env`, and update the variables.
-- `GITHUB_USERNAMES`: GitHub usernames to fetch repositories from. Accepts a plain string (`masonlet`), comma-separated (`masonlet,secondlet`), or a JSON array with optional per-user tokens (`["masonlet", {"name": "other", "token": "github_pat_..."}]`).
-- `GITHUB_ORGS`: GitHub organization names to fetch repositories from. Accepts a plain string (`gh-top-languages`), comma-separated(`gh-top-languages,starweb-libs`), or a JSON array with optional per-org tokens (`["gh-top-languages", {"name": "starweb-libs", "token": "github_pat_..."}]`)
+- `GITHUB_USERNAMES`: GitHub usernames to fetch repositories from. Accepts a single value (`masonlet`), comma-separated (`masonlet,secondlet`), or a JSON array with optional per-user tokens (`["masonlet", {"name": "other", "token": "github_pat_..."}]`).
+- `GITHUB_ORGS`: GitHub organization names to fetch repositories from. Accepts a single value (`gh-top-languages`), comma-separated(`gh-top-languages,starweb-libs`), or a JSON array with optional per-org tokens (`["gh-top-languages", {"name": "starweb-libs", "token": "github_pat_..."}]`)
 - `IGNORED_REPOS`: Optional comma-separated repo names to exclude from the chart.
 
 ### Running Locally
