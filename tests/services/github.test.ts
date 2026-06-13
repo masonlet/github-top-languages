@@ -102,11 +102,23 @@ describe("fetchLanguageData", () => {
     expect(result).toEqual({ JavaScript: 1500, Python: 300 });
   });
 
-  it("throws on repos API error", async () => {
+  it("handles repos API error gracefully", async () => {
     mockFetch()
       .mockResolvedValueOnce(mockErrorResponse(404, "Not Found"));
 
-    await expect(fetchLanguageData()).rejects.toThrow("GitHub API error: 404 Not Found");
+    const result = await fetchLanguageData();
+    expect(result).toEqual({});
+  });
+
+  it("handles org repos API error gracefully", async () => {
+    vi.unstubAllEnvs();
+    vi.stubEnv("GITHUB_ORGS", '["test-org"]');
+
+    mockFetch()
+      .mockResolvedValueOnce(mockErrorResponse(403, "Forbidden"));
+
+    const result = await fetchLanguageData();
+    expect(result).toEqual({});
   });
 
   it("caches results within refresh interval", async () => {
@@ -226,7 +238,7 @@ describe("fetchLanguageData", () => {
     vi.stubEnv("GITHUB_USERNAMES", '["testuser"');
 
     await expect(fetchLanguageData()).rejects.toThrow(
-      "At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set"
+      "GITHUB_USERNAMES/GITHUB_ORGS must be a valid JSON array. Check your configuration."
     );
   });
 
@@ -270,6 +282,45 @@ describe("fetchLanguageData", () => {
     expect(global.fetch).toHaveBeenCalledWith(
       "https://api.github.com/repos/test-org/org-repo/languages",
       { headers: { Authorization: "Bearer org-token" } }
+    );
+  });
+
+  it("trims whitespace from plain string entries in JSON array", async () => {
+    vi.stubEnv("GITHUB_USERNAMES", '[" testuser "]');
+
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse([repos[0]]))
+      .mockResolvedValueOnce(mockResponse(languages));
+
+    await fetchLanguageData();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.github.com/users/testuser/repos?per_page=100", {}
+    );
+  });
+
+  it("handles unexpected pagination URL gracefully", async () => {
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse(
+        [{ name: "repo1", fork: false, full_name: "user/repo1" }],
+        `<https://evil.com/repos>; rel="next"`
+      ));
+
+    const result = await fetchLanguageData();
+    expect(result).toEqual({});
+  });
+
+  it("ignores whitespace-only tokens in JSON array", async () => {
+    vi.stubEnv("GITHUB_USERNAMES", '[{"name": "testuser", "token": "   "}]');
+
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse([repos[0]]))
+      .mockResolvedValueOnce(mockResponse(languages));
+
+    await fetchLanguageData();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.github.com/users/testuser/repos?per_page=100", {}
     );
   });
 });

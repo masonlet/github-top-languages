@@ -10,22 +10,30 @@ let lastRefresh = 0;
 
 function parseSources(env: string | undefined): Source[] {
   if (!env) return [];
-  try {
-    const parsed = JSON.parse(env);
-    if (Array.isArray(parsed)) {
-      return parsed.map(entry => {
-        if (typeof entry === "string") return { name: entry };
-        if (entry && typeof entry === "object" && "name" in entry) return {
-          name: String(entry.name), ...(entry.token && {token: String(entry.token) })
-        };
+
+  const trimmed = env.trim();
+  if (trimmed.startsWith('[')) {
+    try {
+      const parsed = JSON.parse(env);
+      return (parsed as unknown[]).map(entry => {
+        if (typeof entry === "string" && entry.trim()) return { name: entry.trim() };
+        if (entry && typeof entry === "object" && "name" in entry && typeof entry.name === "string" && entry.name.trim()) {
+          const source: Source = { name: entry.name.trim() };
+          if ("token" in entry
+           && typeof entry.token === "string"
+           && entry.token.trim()
+          ) source.token = entry.token.trim();
+          return source;
+        }
         return null;
-      }).filter((s): s is Source => !!s && !!s.name);
+      }).filter((s): s is Source => !!s);
+    } catch {
+      console.error("Failed to parse configuration JSON array.");
+      throw new Error("GITHUB_USERNAMES/GITHUB_ORGS must be a valid JSON array. Check your configuration.");
     }
-  } catch (e) {
-    console.error("Failed to parse configuration string.");
   }
-  if (env.trimStart().startsWith('[')) return [];
-  return env.split(',').map(s => ({ name: s.trim().replace(/^["']|["']$/g, "") })).filter(s => s.name);
+
+  return trimmed.split(',').map(s => ({ name: s.trim().replace(/^["']|["']$/g, "") })).filter(s => s.name);
 }
 
 function makeOptions(token?: string): RequestInit {
@@ -54,6 +62,9 @@ async function fetchAllRepos(url: string, token?: string): Promise<Repo[]> {
     if (!response.ok) throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
     repos.push(...(await response.json() as Repo[]));
     nextUrl = parseNextLink(response.headers.get("Link"));
+    if (nextUrl && !nextUrl.startsWith("https://api.github.com/")) throw new Error(
+      `Unexpected pagination URL: ${nextUrl}`
+    );
   }
 
   return repos;
@@ -79,10 +90,18 @@ export async function fetchLanguageData(useTestData = false): Promise<LanguageBy
     ...usernames.map(u =>
       fetchAllRepos(`https://api.github.com/users/${u.name}/repos?per_page=100`, u.token)
         .then(repos => ({ token: u.token, repos }))
+        .catch(err => {
+          console.error(`Skipping user "${u.name}":`, err.message);
+          return { token: u.token, repos: [] as Repo[] };
+        })
     ),
     ...orgs.map(o =>
       fetchAllRepos(`https://api.github.com/orgs/${o.name}/repos?per_page=100`, o.token)
         .then(repos => ({ token: o.token, repos }))
+        .catch(err => {
+          console.error(`Skipping org "${o.name}":`, err.message);
+          return { token: o.token, repos: [] as Repo[] };
+        })
     )
   ]);
 
