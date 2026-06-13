@@ -32,6 +32,7 @@ describe("fetchLanguageData", () => {
     global.fetch = vi.fn();
     vi.resetModules();
     resetCache();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -203,6 +204,72 @@ describe("fetchLanguageData", () => {
     expect(global.fetch).toHaveBeenCalledWith(
       "https://api.github.com/repos/user/repo1/languages",
       { headers: { Authorization: "Bearer test-token" } }
+    );
+  });
+
+  it("parses CSV fallback for GITHUB_USERNAMES", async () => {
+    vi.stubEnv("GITHUB_USERNAMES", "testuser");
+
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse([repos[0]]))
+      .mockResolvedValueOnce(mockResponse(languages));
+
+    await fetchLanguageData();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.github.com/users/testuser/repos?per_page=100", {}
+    );
+  });
+
+  it("returns empty sources for broken JSON array", async () => {
+    vi.unstubAllEnvs();
+    vi.stubEnv("GITHUB_USERNAMES", '["testuser"');
+
+    await expect(fetchLanguageData()).rejects.toThrow(
+      "At least one of GITHUB_USERNAMES or GITHUB_ORGS must be set"
+    );
+  });
+
+  it("skips malformed entries in JSON array", async () => {
+    vi.stubEnv("GITHUB_USERNAMES", '[123, "testuser"]');
+
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse([repos[0]]))
+      .mockResolvedValueOnce(mockResponse(languages));
+
+    await fetchLanguageData();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.github.com/users/testuser/repos?per_page=100", {}
+    );
+  });
+
+  it("handles language fetch network failure gracefully", async () => {
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse([repos[0]]))
+      .mockRejectedValueOnce(new Error("Network error"));
+
+    const result = await fetchLanguageData();
+    expect(result).toEqual({});
+  });
+
+  it("sends Authorization header for org token", async () => {
+    vi.unstubAllEnvs();
+    vi.stubEnv("GITHUB_ORGS", '[{"name": "test-org", "token": "org-token"}]');
+
+    mockFetch()
+      .mockResolvedValueOnce(mockResponse([{ name: "org-repo", fork: false, full_name: "test-org/org-repo" }]))
+      .mockResolvedValueOnce(mockResponse({ TypeScript: 4000 }));
+
+    await fetchLanguageData();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.github.com/orgs/test-org/repos?per_page=100",
+      { headers: { Authorization: "Bearer org-token" } }
+    );
+    expect(global.fetch).toHaveBeenCalledWith(
+      "https://api.github.com/repos/test-org/org-repo/languages",
+      { headers: { Authorization: "Bearer org-token" } }
     );
   });
 });
