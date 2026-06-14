@@ -12,7 +12,13 @@
   "bugs": {
     "url": "https://github.com/gh-top-languages/api/issues"
   },
-  "keywords": ["typescript", "github-profile", "github-readme", "top-languages", "svg"],
+  "keywords": [
+    "typescript",
+    "github-profile",
+    "github-readme",
+    "top-languages",
+    "svg"
+  ],
   "type": "module",
   "scripts": {
     "test": "vitest",
@@ -20,13 +26,15 @@
     "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": { "@gh-top-languages/lib": "^1.0.3" },
+  "dependencies": {
+    "@gh-top-languages/lib": "^1.0.3"
+  },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "@vercel/node": "^5.7.17",
     "@types/node": "^25.3.1",
-    "vitest": "^4.0.17",
-    "@vitest/coverage-v8": "^4.0.17"
+    "@vercel/node": "^5.5.17",
+    "@vitest/coverage-v8": "^4.0.17",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.17"
   },
   "overrides": {
     "minimatch": "10.2.5",
@@ -36,4 +44,3 @@
     "undici": "6.24.0"
   }
 }
-
